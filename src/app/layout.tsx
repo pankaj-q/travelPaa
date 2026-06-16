@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "GlobalVisa Consultancy | Expert Visa Services Worldwide",
+  title: "travelPaa | Expert Visa Services Worldwide",
   description:
     "Professional visa consultancy services for 120+ countries. Tourist, business, student, and work visas with 98% success rate. Apply now for free consultation.",
   keywords: [

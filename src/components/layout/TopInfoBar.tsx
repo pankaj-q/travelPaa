@@ -12,19 +12,19 @@ export function TopInfoBar() {
             className="flex items-center gap-1.5 transition-colors hover:text-coral"
           >
             <Phone className="h-3.5 w-3.5" />
-            +1 (800) 123-4567
+            +91-98999-21559
           </a>
           <a
             href="mailto:info@globalvisaconsult.com"
             className="flex items-center gap-1.5 transition-colors hover:text-coral"
           >
             <Mail className="h-3.5 w-3.5" />
-            info@globalvisaconsult.com
+            holidays@travelpaa.com
           </a>
         </div>
         <div className="flex items-center gap-1.5">
           <MapPin className="h-3.5 w-3.5 text-coral" />
-          <span>123 Visa Avenue, New York, NY 10001</span>
+          <span>13, 3rd Floor, Vaishali Enclave, Pitampura, Delhi, 110034</span>
         </div>
       </div>
     </div>
