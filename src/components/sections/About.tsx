@@ -63,7 +63,7 @@ export function About() {
             <SectionHeading
               badge="About Us"
               title="Your Trusted Partner in Global Mobility"
-              subtitle="With over 15 years of experience, GlobalVisa Consultancy has helped thousands of travelers achieve their dreams of international travel."
+              subtitle="With over 15 years of experience,travelPaa has helped thousands of travelers achieve their dreams of international travel."
               centered={false}
             />
 
@@ -104,7 +104,7 @@ export function About() {
             <div className="mt-8 flex flex-wrap gap-4">
               {[
                 { icon: Shield, text: "Licensed & Insured" },
-                { icon: TrendingUp, text: "98% Success Rate" },
+                { icon: TrendingUp, text: "38760+ Happy Clients" },
               ].map(({ icon: Icon, text }) => (
                 <div
                   key={text}

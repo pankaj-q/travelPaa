@@ -37,12 +37,12 @@ export function Footer() {
                 <Globe2 className="h-5 w-5 text-white" />
               </div>
               <div>
-                <span className="block text-lg font-bold">jsdbiz Visa Consultancy</span>
+              <span className="text-lg font-bold text-[#60A5FA]">travel</span><span className="text-lg font-bold text-red-500">Paa</span>
               </div>
             </Link>
             <p className="mt-4 text-sm leading-relaxed text-white/70">
-              Your trusted partner for seamless visa applications across 120+
-              countries worldwide.
+            Travelpaa Private Limited
+            Travelpaa Private Limited (TravelPaa) started in 1981 and is a tour and travel company with various international and domestic packages aimed to simplify the entire traveling experience making it more streamlined
             </p>
             <div className="mt-6 flex gap-3">
               {socials.map(({ icon: Icon, href, label }) => (
@@ -104,7 +104,7 @@ export function Footer() {
             <ul className="space-y-3">
               <li className="flex items-start gap-2.5 text-sm text-white/70">
                 <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-coral" />
-                123 Visa Avenue, New York, NY 10001
+                ADDRESS: 13, 3rd Floor, Vaishali Enclave, Pitampura, Delhi, 110034
               </li>
               <li>
                 <a
@@ -112,7 +112,7 @@ export function Footer() {
                   className="flex items-center gap-2.5 text-sm text-white/70 transition-colors hover:text-coral"
                 >
                   <Phone className="h-4 w-4 text-coral" />
-                  +1 (800) 123-4567
+                  +91-98999-21559
                 </a>
               </li>
               <li>
@@ -121,7 +121,7 @@ export function Footer() {
                   className="flex items-center gap-2.5 text-sm text-white/70 transition-colors hover:text-coral"
                 >
                   <Mail className="h-4 w-4 text-coral" />
-                  info@globalvisaconsult.com
+                  holidays@travelpaa.com
                 </a>
               </li>
             </ul>
@@ -130,7 +130,7 @@ export function Footer() {
 
         <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-white/10 pt-8 sm:flex-row">
           <p className="text-xs text-white/50">
-            &copy; {new Date().getFullYear()} jsdbiz solutions visa Consultancy. All rights
+            &copy; {new Date().getFullYear()} travelPaa. @All rights
             reserved.
           </p>
           <div className="flex gap-6 text-xs text-white/50">

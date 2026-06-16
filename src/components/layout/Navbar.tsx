@@ -45,16 +45,11 @@ export function Navbar() {
     >
       <nav className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 lg:px-8">
         <Link href="/" className="group flex items-center gap-2.5">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-coral shadow-md shadow-coral/30 transition-transform group-hover:scale-105">
+          {/* <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-coral shadow-md shadow-coral/30 transition-transform group-hover:scale-105">
             <Globe2 className="h-5 w-5 text-white" />
-          </div>
+          </div> */}
           <div>
-            <span className="block text-lg font-bold leading-tight text-foreground font-color-coral-light">
-            jsdbiz
-            </span>
-            <span className="block text-extra-small font-light font-size-sm text-[#FF6F61] leading-tight text-foreground">
-            Visa Consultancy
-            </span>
+          <span className="text-lg font-bold text-[#60A5FA]">travel</span><span className="text-lg font-bold text-coral-light">Paa</span>
           </div>
         </Link>
 
