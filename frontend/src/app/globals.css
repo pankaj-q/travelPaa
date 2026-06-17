@@ -1,0 +1,76 @@
+@import "tailwindcss";
+
+:root {
+  --background: #f8f9fc;
+  --foreground: #1a1f36;
+  --surface: #ffffff;
+  --muted: #6b7280;
+  --muted-bg: #f1f3f9;
+  --border: #e2e8f0;
+  --coral: #ff6b6b;
+  --coral-light: #ff8787;
+  --coral-dark: #ee5a5a;
+  --navy: #1a1f36;
+  --navy-dark: #0f1225;
+}
+
+.dark {
+  --background: #0f1225;
+  --foreground: #f1f3f9;
+  --surface: #1a1f36;
+  --muted: #94a3b8;
+  --muted-bg: #141829;
+  --border: #2d3748;
+  --navy: #1a1f36;
+  --navy-dark: #0a0c18;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-surface: var(--surface);
+  --color-muted: var(--muted);
+  --color-muted-bg: var(--muted-bg);
+  --color-border: var(--border);
+  --color-coral: var(--coral);
+  --color-coral-light: var(--coral-light);
+  --color-coral-dark: var(--coral-dark);
+  --color-navy: var(--navy);
+  --color-navy-dark: var(--navy-dark);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+::selection {
+  background: var(--coral);
+  color: white;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--muted);
+}
