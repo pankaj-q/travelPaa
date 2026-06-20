@@ -13,9 +13,6 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-  turbopack: {
-    root: "/Users/pankaj/Frontend_Project",
-  },
 };
 
 export default nextConfig;
