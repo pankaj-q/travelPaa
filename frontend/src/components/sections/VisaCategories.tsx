@@ -52,7 +52,7 @@ export function VisaCategories() {
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.08 }}
                 whileHover={{ y: -6 }}
-                className="group relative overflow-hidden rounded-2xl border border-border/60 bg-surface p-6 shadow-md transition-all hover:border-coral/20 hover:shadow-xl hover:shadow-coral/10 will-change-transform"
+                className="group relative overflow-hidden rounded-2xl border border-border/60 bg-surface p-6 shadow-md transition-all duration-300 hover:border-coral/30 hover:shadow-2xl hover:shadow-coral/30 will-change-transform"
               >
                 <div className="absolute inset-x-0 top-0 h-0.5 bg-gradient-to-r from-transparent via-coral/50 to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
 
