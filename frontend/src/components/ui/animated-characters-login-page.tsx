@@ -614,12 +614,15 @@ export function LoginPage() {
             <div className="size-8 rounded-lg bg-primary/10 flex items-center justify-center">
               <Sparkles className="size-4 text-primary" />
             </div>
-            <span>travelPaa</span>
+             <span>
+              <span className="text-black">travel</span>
+              <span className="text-coral">Paa</span>
+             </span>
           </div>
 
           <div className="text-center mb-10">
             <h1 className="text-3xl font-bold tracking-tight mb-2">
-              Welcome back!
+              Welcome Back!
             </h1>
             <p className="text-muted-foreground text-sm">
               Please enter your details
