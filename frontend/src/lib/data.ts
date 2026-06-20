@@ -7,6 +7,13 @@ export interface Country {
   visaType: string;
   processingTime: string;
   description: string;
+  price: number;
+  rating?: string;
+  processing?: string;
+  visaCategories?: string[];
+  approvalRate?: string;
+  popular?: boolean;
+  featured?: boolean;
 }
 
 export interface Service {
@@ -22,6 +29,7 @@ export interface VisaCategory {
   description: string;
   icon: string;
   duration: string;
+  price: number;
 }
 
 export const countries: Country[] = [
@@ -37,6 +45,7 @@ export const countries: Country[] = [
     processingTime: "15–30 days",
     description:
       "Expert guidance for US tourist, business, and student visa applications.",
+    price: 18500,
   },
   {
     id: "uk",
@@ -50,6 +59,7 @@ export const countries: Country[] = [
     processingTime: "10–15 days",
     description:
       "Streamlined UK visa processing with document review and interview prep.",
+    price: 16000,
   },
   {
     id: "canada",
@@ -61,6 +71,7 @@ export const countries: Country[] = [
     processingTime: "12–20 days",
     description:
       "Complete support for Canadian visitor visas and study permits.",
+    price: 12000,
   },
   {
     id: "australia",
@@ -72,6 +83,7 @@ export const countries: Country[] = [
     processingTime: "10–18 days",
     description:
       "End-to-end Australia visa assistance with high approval rates.",
+    price: 14000,
   },
   {
     id: "germany",
@@ -83,6 +95,7 @@ export const countries: Country[] = [
     processingTime: "7–14 days",
     description:
       "Schengen visa expertise for Germany and EU travel destinations.",
+    price: 11000,
   },
   {
     id: "uae",
@@ -94,6 +107,7 @@ export const countries: Country[] = [
     processingTime: "3–5 days",
     description:
       "Fast-track UAE tourist and transit visa processing services.",
+    price: 7500,
   },
   {
     id: "singapore",
@@ -105,6 +119,7 @@ export const countries: Country[] = [
     processingTime: "3–7 days",
     description:
       "Quick Singapore visa applications with personalized consultation.",
+    price: 6000,
   },
   {
     id: "japan",
@@ -116,6 +131,7 @@ export const countries: Country[] = [
     processingTime: "5–10 days",
     description:
       "Japan visa guidance including documentation and embassy coordination.",
+    price: 9000,
   },
 ];
 
@@ -184,6 +200,7 @@ export const visaCategories: VisaCategory[] = [
     description: "Explore the world with hassle-free tourist visa processing.",
     icon: "Plane",
     duration: "Up to 90 days",
+    price: 5000,
   },
   {
     id: "business",
@@ -191,6 +208,7 @@ export const visaCategories: VisaCategory[] = [
     description: "Attend meetings, conferences, and trade events globally.",
     icon: "Briefcase",
     duration: "Up to 180 days",
+    price: 8000,
   },
   {
     id: "student",
@@ -198,6 +216,7 @@ export const visaCategories: VisaCategory[] = [
     description: "Pursue education abroad with complete study visa support.",
     icon: "GraduationCap",
     duration: "Course duration",
+    price: 10000,
   },
   {
     id: "work",
@@ -205,6 +224,7 @@ export const visaCategories: VisaCategory[] = [
     description: "Secure employment visas with employer sponsorship guidance.",
     icon: "Building2",
     duration: "1–5 years",
+    price: 15000,
   },
   {
     id: "family",
@@ -212,6 +232,7 @@ export const visaCategories: VisaCategory[] = [
     description: "Reunite with loved ones through family reunion visa programs.",
     icon: "Heart",
     duration: "Varies",
+    price: 12000,
   },
   {
     id: "transit",
@@ -219,6 +240,7 @@ export const visaCategories: VisaCategory[] = [
     description: "Quick transit visa solutions for layovers and connecting flights.",
     icon: "ArrowRightLeft",
     duration: "Up to 72 hours",
+    price: 3000,
   },
 ];
 

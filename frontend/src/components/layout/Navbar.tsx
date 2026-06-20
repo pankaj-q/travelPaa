@@ -10,14 +10,17 @@ import {
   Moon,
   ChevronDown,
   Globe2,
+  LogOut,
+  User,
 } from "lucide-react";
 import { useTheme } from "@/components/providers/ThemeProvider";
+import { useAuth } from "@/contexts/AuthContext";
 
 const navLinks = [
   { href: "#home", label: "Home" },
   { href: "#services", label: "Services" },
   { href: "#about", label: "About" },
-  { href: "#visa-types", label: "Visa Types" },
+  { href: "#visa-categories", label: "Visa Types" },
   { href: "#countries", label: "Countries" },
   { href: "#contact", label: "Contact" },
 ];
@@ -28,8 +31,9 @@ export function Navbar() {
   const [activeSection, setActiveSection] = useState("#home");
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
+  const { user, logout } = useAuth();
+  const [loggingOut, setLoggingOut] = useState(false);
 
-  // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => { setMounted(true); }, []);
 
   useEffect(() => {
@@ -58,13 +62,19 @@ export function Navbar() {
       },
       { rootMargin: "-40% 0px -55% 0px" }
     );
-    const ids = ["home", "services", "about", "visa-types", "countries", "contact"];
+    const ids = ["home", "services", "about", "visa-categories", "countries", "contact"];
     ids.forEach((id) => {
       const el = document.getElementById(id);
       if (el) observer.observe(el);
     });
     return () => observer.disconnect();
   }, []);
+
+  const handleLogout = async () => {
+    setLoggingOut(true);
+    await logout();
+    setLoggingOut(false);
+  };
 
   return (
     <header
@@ -127,6 +137,30 @@ export function Navbar() {
             </button>
           )}
 
+          {user ? (
+            <div className="hidden items-center gap-3 sm:flex">
+              <div className="flex items-center gap-2 rounded-lg bg-coral/10 px-3 py-2">
+                <User className="h-4 w-4 text-coral" />
+                <span className="text-sm font-medium text-foreground">{user.name}</span>
+              </div>
+              <button
+                onClick={handleLogout}
+                disabled={loggingOut}
+                className="flex items-center gap-1.5 rounded-lg border border-border px-3 py-2 text-sm font-medium text-muted transition-all hover:border-coral/40 hover:text-coral"
+              >
+                <LogOut className="h-3.5 w-3.5" />
+                {loggingOut ? "..." : "Logout"}
+              </button>
+            </div>
+          ) : (
+            <Link
+              href="/auth/login"
+              className="hidden rounded-lg border border-coral/30 bg-coral px-5 py-2.5 text-sm font-semibold text-white shadow-md shadow-coral/30 transition-all hover:bg-coral-dark hover:shadow-lg hover:shadow-coral/40 sm:inline-flex"
+            >
+              Login
+            </Link>
+          )}
+
           <Link
             href="/apply"
             className="hidden rounded-lg bg-coral px-5 py-2.5 text-sm font-semibold text-white shadow-md shadow-coral/30 transition-all hover:bg-coral-dark hover:shadow-lg hover:shadow-coral/40 sm:inline-flex"
@@ -179,10 +213,35 @@ export function Navbar() {
                   </motion.a>
                 );
               })}
+
+              {user ? (
+                <div className="mt-3 space-y-2">
+                  <div className="flex items-center gap-2 rounded-lg bg-coral/10 px-4 py-3">
+                    <User className="h-4 w-4 text-coral" />
+                    <span className="text-sm font-medium text-foreground">{user.name}</span>
+                  </div>
+                  <button
+                    onClick={() => { handleLogout(); setMobileOpen(false); }}
+                    className="flex w-full items-center justify-center gap-2 rounded-lg border border-border px-4 py-3 text-sm font-medium text-muted transition-all hover:border-coral/40 hover:text-coral"
+                  >
+                    <LogOut className="h-4 w-4" />
+                    Logout
+                  </button>
+                </div>
+              ) : (
+                <Link
+                  href="/auth/login"
+                  onClick={() => setMobileOpen(false)}
+                  className="mt-3 block rounded-lg border border-coral/30 bg-coral px-4 py-3 text-center text-sm font-semibold text-white"
+                >
+                  Login
+                </Link>
+              )}
+
               <Link
                 href="/apply"
                 onClick={() => setMobileOpen(false)}
-                className="mt-3 block rounded-lg bg-coral px-4 py-3 text-center text-sm font-semibold text-white shadow-md shadow-coral/30 transition-all hover:bg-coral-dark"
+                className="block rounded-lg bg-coral px-4 py-3 text-center text-sm font-semibold text-white shadow-md shadow-coral/30 transition-all hover:bg-coral-dark"
               >
                 Apply Now
               </Link>

@@ -39,7 +39,6 @@ export function RouteFinder() {
         className="mx-auto max-w-4xl"
       >
         <div className="overflow-hidden rounded-2xl border border-border/60 bg-surface shadow-lg shadow-black/5 dark:shadow-black/20">
-          {/* Header strip */}
           <div className="flex items-center gap-3 border-b border-border/50 px-6 py-4">
             <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-coral/10">
               <Plane className="h-4 w-4 rotate-45 text-coral" />
@@ -56,7 +55,6 @@ export function RouteFinder() {
 
           <form onSubmit={handleApply} className="p-6 sm:p-8">
             <div className="grid gap-5 sm:grid-cols-[1fr_auto_1fr] sm:items-end">
-              {/* Source */}
               <div className="relative">
                 <label
                   htmlFor="source"
@@ -96,7 +94,6 @@ export function RouteFinder() {
                 </div>
               </div>
 
-              {/* Arrow connector */}
               <div className="hidden sm:flex sm:items-center sm:justify-center sm:pb-3">
                 <motion.div
                   animate={{ x: [0, 4, 0] }}
@@ -107,7 +104,6 @@ export function RouteFinder() {
                 </motion.div>
               </div>
 
-              {/* Destination */}
               <div className="relative">
                 <label
                   htmlFor="destination"
@@ -148,7 +144,6 @@ export function RouteFinder() {
               </div>
             </div>
 
-            {/* Mobile arrow */}
             <div className="my-3 flex justify-center sm:hidden">
               <motion.div
                 animate={{ y: [0, 4, 0] }}

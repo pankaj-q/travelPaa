@@ -8,6 +8,7 @@ import { About } from "@/components/sections/About";
 import { VisaCategories } from "@/components/sections/VisaCategories";
 import { CountryCards } from "@/components/sections/CountryCards";
 import { CountriesServed } from "@/components/sections/CountriesServed";
+import { countries } from "@/lib/data";
 
 export default function Home() {
   return (
@@ -20,7 +21,7 @@ export default function Home() {
         <Services />
         <About />
         <VisaCategories />
-        <CountryCards />
+        <CountryCards countries={countries} />
         <CountriesServed />
       </main>
       <Footer />

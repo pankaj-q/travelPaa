@@ -15,7 +15,6 @@ export function About() {
     <section id="about" className="bg-muted-bg py-20 md:py-28">
       <div className="mx-auto max-w-7xl px-4 lg:px-8">
         <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-20">
-          {/* Image side */}
           <motion.div
             initial={{ opacity: 0, x: -40 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -42,7 +41,6 @@ export function About() {
               <div className="absolute inset-0 bg-gradient-to-t from-navy/60 to-transparent" />
             </div>
 
-            {/* Floating badge */}
             <motion.div
               animate={{ y: [0, -6, 0] }}
               transition={{ duration: 4, repeat: Infinity }}
@@ -63,7 +61,6 @@ export function About() {
 
           </motion.div>
 
-          {/* Content side */}
           <motion.div
             initial={{ opacity: 0, x: 40 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -73,7 +70,7 @@ export function About() {
             <SectionHeading
               badge="About Us"
               title="Your Trusted Partner in Global Mobility"
-              subtitle="With over 15 years of experience,travelPaa has helped thousands of travelers achieve their dreams of international travel."
+              subtitle="With over 15 years of experience, travelPaa has helped thousands of travelers achieve their dreams of international travel."
               centered={false}
             />
 

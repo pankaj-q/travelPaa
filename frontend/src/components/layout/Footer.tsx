@@ -5,10 +5,10 @@ import { Globe2, Mail, Phone, MapPin } from "lucide-react";
 
 const footerLinks = {
   services: [
-    { label: "Tourist Visa", href: "#visa-types" },
-    { label: "Business Visa", href: "#visa-types" },
-    { label: "Student Visa", href: "#visa-types" },
-    { label: "Work Visa", href: "#visa-types" },
+    { label: "Tourist Visa", href: "#visa-categories" },
+    { label: "Business Visa", href: "#visa-categories" },
+    { label: "Student Visa", href: "#visa-categories" },
+    { label: "Work Visa", href: "#visa-categories" },
   ],
   company: [
     { label: "About Us", href: "#about" },
@@ -30,19 +30,18 @@ export function Footer() {
     <footer id="contact" className="border-t border-border/60 bg-navy text-white">
       <div className="mx-auto max-w-7xl px-4 py-16 lg:px-8">
         <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
-          {/* Brand */}
           <div className="sm:col-span-2 lg:col-span-1">
             <Link href="/" className="flex items-center gap-2.5">
               <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-coral">
                 <Globe2 className="h-5 w-5 text-white" />
               </div>
               <div>
-              <span className="text-lg font-bold text-[#60A5FA]">travel</span><span className="text-lg font-bold text-red-500">Paa</span>
+                <span className="text-lg font-bold text-[#60A5FA]">travel</span>
+                <span className="text-lg font-bold text-coral-light">Paa</span>
               </div>
             </Link>
             <p className="mt-4 text-sm leading-relaxed text-white/70">
-            Travelpaa Private Limited
-            Travelpaa Private Limited (TravelPaa) started in 1981 and is a tour and travel company with various international and domestic packages aimed to simplify the entire traveling experience making it more streamlined
+              Travelpaa Private Limited (TravelPaa) started in 1981 and is a tour and travel company with various international and domestic packages aimed to simplify the entire traveling experience making it more streamlined.
             </p>
             <div className="mt-6 flex gap-2">
               {socials.map(({ label, href }) => (
@@ -58,7 +57,6 @@ export function Footer() {
             </div>
           </div>
 
-          {/* Services */}
           <div>
             <h4 className="mb-4 text-sm font-bold uppercase tracking-wider">
               Services
@@ -77,7 +75,6 @@ export function Footer() {
             </ul>
           </div>
 
-          {/* Company */}
           <div>
             <h4 className="mb-4 text-sm font-bold uppercase tracking-wider">
               Company
@@ -96,7 +93,6 @@ export function Footer() {
             </ul>
           </div>
 
-          {/* Contact */}
           <div>
             <h4 className="mb-4 text-sm font-bold uppercase tracking-wider">
               Contact
@@ -130,8 +126,7 @@ export function Footer() {
 
         <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-white/10 pt-8 sm:flex-row">
           <p className="text-xs text-white/50">
-            &copy; {new Date().getFullYear()} travelPaa. @All rights
-            reserved.
+            &copy; {new Date().getFullYear()} travelPaa. All rights reserved.
           </p>
           <div className="flex gap-6 text-xs text-white/50">
             <a href="#" className="transition-colors hover:text-coral">

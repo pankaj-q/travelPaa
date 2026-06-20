@@ -14,7 +14,7 @@ const nextConfig: NextConfig = {
     ],
   },
   turbopack: {
-    root: process.cwd(),
+    root: "/Users/pankaj/Frontend_Project",
   },
 };
 
