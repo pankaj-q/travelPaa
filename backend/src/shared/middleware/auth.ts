@@ -13,7 +13,8 @@ declare global {
 export function authenticate(req: Request, _res: Response, next: NextFunction) {
   const header = req.headers.authorization;
   if (!header?.startsWith("Bearer ")) {
-    throw AppError.unauthorized("Missing or invalid authorization header");
+    next(AppError.unauthorized("Missing or invalid authorization header"));
+    return;
   }
 
   const token = header.slice(7);
@@ -21,13 +22,14 @@ export function authenticate(req: Request, _res: Response, next: NextFunction) {
     req.user = verifyAccessToken(token);
     next();
   } catch {
-    throw AppError.unauthorized("Invalid or expired token");
+    next(AppError.unauthorized("Invalid or expired token"));
   }
 }
 
 export function requireAdmin(req: Request, _res: Response, next: NextFunction) {
   if (req.user?.role !== "ADMIN") {
-    throw AppError.forbidden("Admin access required");
+    next(AppError.forbidden("Admin access required"));
+    return;
   }
   next();
 }

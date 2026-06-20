@@ -5,8 +5,6 @@ import cookieParser from "cookie-parser";
 import { env } from "./config/env";
 import { errorHandler } from "./shared/middleware/error";
 import { apiLimiter } from "./shared/middleware/rateLimit";
-import { logger } from "./shared/utils/logger";
-
 import authRoutes from "./modules/auth/auth.routes";
 import applicationRoutes from "./modules/application/application.routes";
 import paymentRoutes from "./modules/payment/payment.routes";

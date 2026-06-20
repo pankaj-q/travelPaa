@@ -1,33 +1,22 @@
-import { Request, Response, NextFunction } from "express";
+import { Request, Response } from "express";
 import {
   createApplication,
   getUserApplications,
   getApplicationById,
 } from "./application.service";
+import { asyncHandler } from "../../shared/utils/asyncHandler";
 
-export async function create(req: Request, res: Response, next: NextFunction) {
-  try {
-    const app = await createApplication(req.user!.userId, req.body);
-    res.status(201).json({ application: app });
-  } catch (err) {
-    next(err);
-  }
-}
+export const create = asyncHandler(async (req: Request, res: Response) => {
+  const app = await createApplication(req.user!.userId, req.body);
+  res.status(201).json({ application: app });
+});
 
-export async function list(req: Request, res: Response, next: NextFunction) {
-  try {
-    const applications = await getUserApplications(req.user!.userId);
-    res.json({ applications });
-  } catch (err) {
-    next(err);
-  }
-}
+export const list = asyncHandler(async (req: Request, res: Response) => {
+  const applications = await getUserApplications(req.user!.userId);
+  res.json({ applications });
+});
 
-export async function getById(req: Request, res: Response, next: NextFunction) {
-  try {
-    const app = await getApplicationById(req.user!.userId, req.params.id as string);
-    res.json({ application: app });
-  } catch (err) {
-    next(err);
-  }
-}
+export const getById = asyncHandler(async (req: Request, res: Response) => {
+  const app = await getApplicationById(req.user!.userId, req.params.id as string);
+  res.json({ application: app });
+});

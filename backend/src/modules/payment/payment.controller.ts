@@ -1,36 +1,25 @@
-import { Request, Response, NextFunction } from "express";
+import { Request, Response } from "express";
 import { stripe } from "../../config/stripe";
 import { env } from "../../config/env";
 import { createPaymentIntent, confirmPayment, getPaymentHistory } from "./payment.service";
+import { asyncHandler } from "../../shared/utils/asyncHandler";
 
-export async function createIntent(req: Request, res: Response, next: NextFunction) {
-  try {
-    const { applicationId } = req.body;
-    const result = await createPaymentIntent(req.user!.userId, applicationId);
-    res.json(result);
-  } catch (err) {
-    next(err);
-  }
-}
+export const createIntent = asyncHandler(async (req: Request, res: Response) => {
+  const { applicationId } = req.body;
+  const result = await createPaymentIntent(req.user!.userId, applicationId);
+  res.json(result);
+});
 
-export async function confirm(req: Request, res: Response, next: NextFunction) {
-  try {
-    const { paymentIntentId, applicationId } = req.body;
-    const result = await confirmPayment(req.user!.userId, paymentIntentId, applicationId);
-    res.json(result);
-  } catch (err) {
-    next(err);
-  }
-}
+export const confirm = asyncHandler(async (req: Request, res: Response) => {
+  const { paymentIntentId, applicationId } = req.body;
+  const result = await confirmPayment(req.user!.userId, paymentIntentId, applicationId);
+  res.json(result);
+});
 
-export async function history(req: Request, res: Response, next: NextFunction) {
-  try {
-    const payments = await getPaymentHistory(req.user!.userId);
-    res.json({ payments });
-  } catch (err) {
-    next(err);
-  }
-}
+export const history = asyncHandler(async (req: Request, res: Response) => {
+  const payments = await getPaymentHistory(req.user!.userId);
+  res.json({ payments });
+});
 
 export async function webhook(req: Request, res: Response) {
   const sig = req.headers["stripe-signature"] as string;

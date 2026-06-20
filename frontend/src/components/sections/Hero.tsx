@@ -73,6 +73,7 @@ export function Hero() {
           </video>
         )}
         <div className="absolute inset-0 bg-gradient-to-r from-navy/95 via-navy/80 to-navy/60 dark:from-navy-dark/95 dark:via-navy-dark/85 dark:to-navy-dark/70 will-change-transform" />
+        <div className="hero-pattern absolute inset-0" />
       </div>
 
       <div className="relative z-10 mx-auto grid w-full max-w-7xl gap-10 px-4 py-20 lg:grid-cols-2 lg:items-center lg:gap-16 lg:px-8 lg:py-28">

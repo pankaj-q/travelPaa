@@ -30,7 +30,7 @@ export const countries: Country[] = [
     name: "United States",
     slug: "united-states",
     image:
-      "https://images.unsplash.com/photo-1485738422979-f5c176d33141?w=800&q=80",
+      "https://images.unsplash.com/photo-1501594907352-04cda38ebc29?w=800&q=80",
     video:
       "https://videos.pexels.com/video-files/3571264/3571264-uhd_2560_1440_25fps.mp4",
     visaType: "B1/B2 Tourist & Business",
@@ -56,7 +56,7 @@ export const countries: Country[] = [
     name: "Canada",
     slug: "canada",
     image:
-      "https://images.unsplash.com/photo-1519832979-6f9920a0f4f0?w=800&q=80",
+      "https://images.unsplash.com/photo-1521401830884-6c03c1c87ebb?w=800&q=80",
     visaType: "Visitor & Study Permit",
     processingTime: "12–20 days",
     description:
@@ -67,7 +67,7 @@ export const countries: Country[] = [
     name: "Australia",
     slug: "australia",
     image:
-      "https://images.unsplash.com/photo-1523482580695-30338a5f2376?w=800&q=80",
+      "https://images.unsplash.com/photo-1506973035872-a4ec16b8e8d9?w=800&q=80",
     visaType: "Subclass 600 Visitor",
     processingTime: "10–18 days",
     description:
@@ -78,7 +78,7 @@ export const countries: Country[] = [
     name: "Germany",
     slug: "germany",
     image:
-      "https://images.unsplash.com/photo-1467269209834-02b093751204?w=800&q=80",
+      "https://images.unsplash.com/photo-1560969184-10fe8719e047?w=800&q=80",
     visaType: "Schengen Visa",
     processingTime: "7–14 days",
     description:
@@ -100,7 +100,7 @@ export const countries: Country[] = [
     name: "Singapore",
     slug: "singapore",
     image:
-      "https://images.unsplash.com/photo-1525623000545-4ff378af679e?w=800&q=80",
+      "https://images.pexels.com/photos/777059/pexels-photo-777059.jpeg?auto=compress&cs=tinysrgb&w=800",
     visaType: "Tourist Visa",
     processingTime: "3–7 days",
     description:

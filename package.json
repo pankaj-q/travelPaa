@@ -1,0 +1,14 @@
+{
+  "name": "travelpaa",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": ["frontend", "backend"],
+  "scripts": {
+    "dev": "npm run dev -w visa-consultancy",
+    "build": "npm run build -w visa-consultancy",
+    "start": "npm run start -w visa-consultancy",
+    "lint": "npm run lint -w visa-consultancy",
+    "dev:backend": "npm run dev -w visa-consultancy-backend",
+    "build:backend": "npm run build -w visa-consultancy-backend"
+  }
+}

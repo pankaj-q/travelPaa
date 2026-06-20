@@ -11,7 +11,7 @@ import {
   ChevronDown,
   Globe2,
 } from "lucide-react";
-import { useTheme } from "next-themes";
+import { useTheme } from "@/components/providers/ThemeProvider";
 
 const navLinks = [
   { href: "#home", label: "Home" },
