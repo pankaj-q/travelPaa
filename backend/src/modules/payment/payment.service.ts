@@ -58,15 +58,15 @@ export async function confirmPayment(userId: string, paymentIntentId: string, ap
     throw AppError.badRequest(`Payment not successful. Status: ${pi.status}`);
   }
 
-  const payment = await prisma.payment.findUnique({ where: { applicationId } });
-  if (!payment) {
-    throw AppError.notFound("Payment record not found");
-  }
-  if (payment.userId !== userId) {
-    throw AppError.forbidden("Payment does not belong to user");
-  }
-
   const updated = await prisma.$transaction(async (tx) => {
+    const payment = await tx.payment.findUnique({ where: { applicationId } });
+    if (!payment) {
+      throw AppError.notFound("Payment record not found");
+    }
+    if (payment.userId !== userId) {
+      throw AppError.forbidden("Payment does not belong to user");
+    }
+
     const p = await tx.payment.update({
       where: { applicationId },
       data: { status: "COMPLETED" },
@@ -117,12 +117,29 @@ export async function handleWebhookEvent(event: StripeEvent) {
   }
 }
 
-export async function getPaymentHistory(userId: string) {
-  return prisma.payment.findMany({
-    where: { userId },
-    orderBy: { createdAt: "desc" },
-    include: { application: { select: { destination: true, visaType: true } } },
-  });
+export async function getPaymentHistory(userId: string, page = 1, limit = 20) {
+  const skip = (page - 1) * limit;
+  const where = { userId };
+
+  const [payments, total] = await Promise.all([
+    prisma.payment.findMany({
+      where,
+      orderBy: { createdAt: "desc" },
+      skip,
+      take: limit,
+      select: {
+        id: true,
+        amount: true,
+        currency: true,
+        status: true,
+        createdAt: true,
+        application: { select: { destination: true, visaType: true } },
+      },
+    }),
+    prisma.payment.count({ where }),
+  ]);
+
+  return { payments, total, page, totalPages: Math.ceil(total / limit) };
 }
 
 export async function getAdminStats() {

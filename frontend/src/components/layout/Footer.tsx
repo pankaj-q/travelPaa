@@ -5,15 +5,15 @@ import { Globe2, Mail, Phone, MapPin } from "lucide-react";
 
 const footerLinks = {
   services: [
-    { label: "Tourist Visa", href: "#visa-categories" },
-    { label: "Business Visa", href: "#visa-categories" },
-    { label: "Student Visa", href: "#visa-categories" },
-    { label: "Work Visa", href: "#visa-categories" },
+    { label: "Tourist Visa", href: "/visa/tourist" },
+    { label: "Business Visa", href: "/visa/business" },
+    { label: "Student Visa", href: "/visa/student" },
+    { label: "Work Visa", href: "/visa/work" },
   ],
   company: [
-    { label: "About Us", href: "#about" },
-    { label: "Our Services", href: "#services" },
-    { label: "Countries", href: "#countries" },
+    { label: "About Us", href: "/#about" },
+    { label: "Our Services", href: "/#services" },
+    { label: "Countries", href: "/#countries" },
     { label: "Apply Now", href: "/apply" },
   ],
 };
@@ -64,12 +64,12 @@ export function Footer() {
             <ul className="space-y-2.5">
               {footerLinks.services.map((link) => (
                 <li key={link.label}>
-                  <a
+                  <Link
                     href={link.href}
                     className="text-sm text-white/70 transition-colors hover:text-coral"
                   >
                     {link.label}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>

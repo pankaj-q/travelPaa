@@ -12,8 +12,10 @@ export const create = asyncHandler(async (req: Request, res: Response) => {
 });
 
 export const list = asyncHandler(async (req: Request, res: Response) => {
-  const applications = await getUserApplications(req.user!.userId);
-  res.json({ applications });
+  const page = typeof req.query.page === "string" ? Number(req.query.page) : 1;
+  const limit = typeof req.query.limit === "string" ? Number(req.query.limit) : 20;
+  const result = await getUserApplications(req.user!.userId, page, limit);
+  res.json(result);
 });
 
 export const getById = asyncHandler(async (req: Request, res: Response) => {

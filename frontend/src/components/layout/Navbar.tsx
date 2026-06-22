@@ -17,12 +17,12 @@ import { useTheme } from "@/components/providers/ThemeProvider";
 import { useAuth } from "@/contexts/AuthContext";
 
 const navLinks = [
-  { href: "#home", label: "Home" },
-  { href: "#services", label: "Services" },
-  { href: "#about", label: "About" },
-  { href: "#visa-categories", label: "Visa Types" },
-  { href: "#countries", label: "Countries" },
-  { href: "#contact", label: "Contact" },
+  { href: "/#home", label: "Home" },
+  { href: "/#services", label: "Services" },
+  { href: "/#about", label: "About" },
+  { href: "/#visa-categories", label: "Visa Types" },
+  { href: "/#countries", label: "Countries" },
+  { href: "/#contact", label: "Contact" },
 ];
 
 export function Navbar() {
@@ -98,7 +98,7 @@ export function Navbar() {
 
         <div className="hidden items-center gap-0.5 lg:flex">
           {navLinks.map((link) => {
-            const isActive = activeSection === link.href;
+            const isActive = activeSection === link.href.replace(/^\//, "");
             return (
               <a
                 key={link.href}
@@ -193,7 +193,7 @@ export function Navbar() {
           >
             <div className="space-y-1 px-4 py-4">
               {navLinks.map((link, i) => {
-                const isActive = activeSection === link.href;
+                const isActive = activeSection === link.href.replace(/^\//, "");
                 return (
                   <motion.a
                     key={link.href}

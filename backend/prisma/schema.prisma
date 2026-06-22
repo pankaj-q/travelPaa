@@ -39,6 +39,8 @@ model User {
   applications Application[]
   payments     Payment[]
 
+  @@index([email])
+  @@index([deletedAt])
   @@map("users")
 }
 
@@ -71,7 +73,10 @@ model Application {
   documents Document[]
 
   @@index([userId])
+  @@index([userId, deletedAt])
   @@index([status])
+  @@index([destination])
+  @@index([createdAt])
   @@index([destination, visaType, createdAt])
   @@map("applications")
 }
@@ -92,6 +97,7 @@ model Payment {
 
   @@index([userId])
   @@index([status])
+  @@index([applicationId, status])
   @@index([stripePaymentIntentId])
   @@map("payments")
 }
@@ -118,5 +124,6 @@ model Contact {
   message   String
   createdAt DateTime @default(now())
 
+  @@index([createdAt])
   @@map("contacts")
 }

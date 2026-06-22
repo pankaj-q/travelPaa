@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import Script from "next/script";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
 import "./globals.css";
@@ -35,11 +36,9 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col bg-background text-foreground">
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `(function(){try{var e=localStorage.getItem("theme");if(!e){e=window.matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light"}var d=document.documentElement;d.classList.remove("light","dark");d.classList.add(e);d.style.colorScheme=e}catch(t){}})()`,
-          }}
-        />
+        <Script id="theme-init" strategy="beforeInteractive">
+          {`(function(){try{var e=localStorage.getItem("theme");if(!e){e=window.matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light"}var d=document.documentElement;d.classList.remove("light","dark");d.classList.add(e);d.style.colorScheme=e}catch(t){}})()`}
+        </Script>
         <ThemeProvider>
           <AuthProvider>{children}</AuthProvider>
         </ThemeProvider>

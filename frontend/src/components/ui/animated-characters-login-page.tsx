@@ -402,7 +402,7 @@ export function LoginPage() {
                 left: "240px",
                 width: "120px",
                 height: "310px",
-                backgroundColor: "#2D2D2D",
+                backgroundColor: "#000000",
                 borderRadius: "8px 8px 0 0",
                 zIndex: 2,
                 transform:
@@ -608,7 +608,7 @@ export function LoginPage() {
         <div className="absolute bottom-1/4 left-1/4 size-96 bg-primary-foreground/5 rounded-full blur-3xl" />
       </div>
 
-      <div className="flex items-center justify-center p-8 bg-background">
+      <div className="flex items-center justify-center p-8 bg-background-black">
         <div className="w-full max-w-[420px]">
           <div className="lg:hidden flex items-center justify-center gap-2 text-lg font-semibold mb-12">
             <div className="size-8 rounded-lg bg-primary/10 flex items-center justify-center">

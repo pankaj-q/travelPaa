@@ -36,18 +36,16 @@ function ApplyForm() {
   const [clientSecret, setClientSecret] = useState<string | null>(null);
   const [paymentLoading, setPaymentLoading] = useState(false);
   const [paymentError, setPaymentError] = useState<string | null>(null);
-  const [applicationId] = useState(() =>
-    `APP-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`
-  );
+  const [submittedAppId, setSubmittedAppId] = useState<string | null>(null);
 
-  const createPaymentIntent = useCallback(async () => {
+  const createPaymentIntent = useCallback(async (appId: string) => {
     setPaymentLoading(true);
     setPaymentError(null);
     try {
       const res = await fetch("/api/create-payment-intent", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ applicationId }),
+        body: JSON.stringify({ applicationId: appId }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error ?? "Failed to initialize payment");
@@ -59,7 +57,7 @@ function ApplyForm() {
     } finally {
       setPaymentLoading(false);
     }
-  }, [applicationId]);
+  }, []);
 
   const [form, setForm] = useState({
     firstName: "",
@@ -87,20 +85,38 @@ function ApplyForm() {
     setPaymentLoading(true);
     setPaymentError(null);
     try {
-      const res = await fetch("/api/create-payment-intent", {
+      const token = localStorage.getItem("accessToken");
+      const appRes = await fetch("/api/applications", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
+        body: JSON.stringify({
+          ...form,
+          previousVisa: form.previousVisa === "yes",
+        }),
+      });
+      const appData = await appRes.json();
+      if (!appRes.ok) throw new Error(appData.error ?? "Failed to submit application");
+
+      const appId = appData.application?.id ?? appData.id;
+      setSubmittedAppId(appId);
+
+      const piRes = await fetch("/api/create-payment-intent", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ applicationId }),
+        body: JSON.stringify({ applicationId: appId }),
       });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error ?? "Failed to initialize payment");
-      setClientSecret(data.clientSecret);
+      const piData = await piRes.json();
+      if (!piRes.ok) throw new Error(piData.error ?? "Failed to initialize payment");
+
+      setClientSecret(piData.clientSecret);
       setStep(4);
     } catch (err) {
       setPaymentError(
         err instanceof Error ? err.message : "Failed to initialize payment"
       );
-      setStep(4);
     } finally {
       setPaymentLoading(false);
     }
@@ -110,9 +126,7 @@ function ApplyForm() {
     setSubmitted(true);
   };
 
-  const handlePaymentError = () => {
-    // error is shown inline in PaymentForm
-  };
+  const handlePaymentError = () => {};
 
   const steps = [
     { num: 1, label: "Personal Info", icon: User },
@@ -148,7 +162,7 @@ function ApplyForm() {
         </p>
         <div className="mt-6 inline-flex items-center gap-2 rounded-lg border border-border/60 bg-muted-bg px-4 py-2">
           <span className="text-[10px] font-semibold uppercase tracking-wider text-muted">App ID</span>
-          <span className="font-mono text-xs font-medium text-foreground">{applicationId}</span>
+          <span className="font-mono text-xs font-medium text-foreground">{submittedAppId}</span>
         </div>
         <Link
           href="/"
@@ -496,7 +510,7 @@ function ApplyForm() {
                       <p className="mb-6 text-xs text-muted">{paymentError}</p>
                       <button
                         type="button"
-                        onClick={createPaymentIntent}
+                        onClick={() => submittedAppId && createPaymentIntent(submittedAppId)}
                         className="inline-flex items-center gap-2 rounded-xl bg-coral px-5 py-2.5 text-sm font-semibold text-white shadow-md transition-all hover:bg-coral-dark"
                       >
                         <RotateCw className="h-4 w-4" />
@@ -509,7 +523,7 @@ function ApplyForm() {
                     <StripeProvider clientSecret={clientSecret}>
                       <PaymentForm
                         amount={5000}
-                        applicationId={applicationId}
+                        applicationId={submittedAppId ?? ""}
                         onSuccess={handlePaymentSuccess}
                         onError={handlePaymentError}
                       />
@@ -605,7 +619,7 @@ export default function ApplyPage() {
               Complete the form below and our expert consultants will guide you
               through every step of the process.
             </p>
-          </motion.div>
+           </motion.div>
 
           <Suspense
             fallback={

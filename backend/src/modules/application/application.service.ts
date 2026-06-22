@@ -13,18 +13,68 @@ export async function createApplication(userId: string, input: CreateApplication
   });
 }
 
-export async function getUserApplications(userId: string) {
-  return prisma.application.findMany({
-    where: { userId, deletedAt: null },
-    orderBy: { createdAt: "desc" },
-    include: { payment: { select: { status: true, amount: true } } },
-  });
+export async function getUserApplications(
+  userId: string,
+  page = 1,
+  limit = 20,
+) {
+  limit = Math.min(limit, 100);
+  const skip = (page - 1) * limit;
+  const where = { userId, deletedAt: null as null };
+
+  const [applications, total] = await Promise.all([
+    prisma.application.findMany({
+      where,
+      orderBy: { createdAt: "desc" },
+      skip,
+      take: limit,
+      select: {
+        id: true,
+        visaType: true,
+        destination: true,
+        status: true,
+        createdAt: true,
+        payment: { select: { status: true, amount: true } },
+      },
+    }),
+    prisma.application.count({ where }),
+  ]);
+
+  return { applications, total, page, totalPages: Math.ceil(total / limit) };
 }
 
 export async function getApplicationById(userId: string, id: string) {
   const app = await prisma.application.findFirst({
     where: { id, userId, deletedAt: null },
-    include: { payment: true, documents: true },
+    select: {
+      id: true,
+      userId: true,
+      status: true,
+      firstName: true,
+      lastName: true,
+      email: true,
+      phone: true,
+      dateOfBirth: true,
+      nationality: true,
+      passportNumber: true,
+      source: true,
+      destination: true,
+      visaType: true,
+      travelDate: true,
+      duration: true,
+      purpose: true,
+      previousVisa: true,
+      additionalInfo: true,
+      adminNotes: true,
+      createdAt: true,
+      updatedAt: true,
+      payment: {
+        select: { id: true, amount: true, status: true, currency: true, createdAt: true },
+      },
+      documents: {
+        select: { id: true, name: true, url: true, type: true, createdAt: true },
+      },
+    },
   });
   if (!app) {
     throw AppError.notFound("Application not found");
@@ -50,7 +100,7 @@ export async function getAllApplications(filters: {
   }
 
   const page = filters.page ?? 1;
-  const limit = filters.limit ?? 20;
+  const limit = Math.min(filters.limit ?? 20, 100);
   const skip = (page - 1) * limit;
 
   const [applications, total] = await Promise.all([
@@ -59,7 +109,16 @@ export async function getAllApplications(filters: {
       orderBy: { createdAt: "desc" },
       skip,
       take: limit,
-      include: { user: { select: { id: true, name: true, email: true } }, payment: true },
+      select: {
+        id: true,
+        status: true,
+        visaType: true,
+        destination: true,
+        source: true,
+        createdAt: true,
+        user: { select: { id: true, name: true, email: true } },
+        payment: { select: { id: true, amount: true, status: true } },
+      },
     }),
     prisma.application.count({ where }),
   ]);

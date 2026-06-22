@@ -11,7 +11,7 @@ async function main() {
 
   const existing = await prisma.user.findUnique({ where: { email: adminEmail } });
   if (existing) {
-    console.log("Admin user already exists — skipping seed.");
+    // console.log("Admin user already exists — skipping seed.");
     return;
   }
 
@@ -27,7 +27,7 @@ async function main() {
     },
   });
 
-  console.log("Admin user created: admin@travelpaa.com / admin123");
+  // console.log("Admin user created: admin@travelpaa.com / admin123");
 }
 
 main()

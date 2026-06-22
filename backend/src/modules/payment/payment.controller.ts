@@ -17,8 +17,10 @@ export const confirm = asyncHandler(async (req: Request, res: Response) => {
 });
 
 export const history = asyncHandler(async (req: Request, res: Response) => {
-  const payments = await getPaymentHistory(req.user!.userId);
-  res.json({ payments });
+  const page = typeof req.query.page === "string" ? Number(req.query.page) : 1;
+  const limit = typeof req.query.limit === "string" ? Number(req.query.limit) : 20;
+  const result = await getPaymentHistory(req.user!.userId, page, limit);
+  res.json(result);
 });
 
 export async function webhook(req: Request, res: Response) {
