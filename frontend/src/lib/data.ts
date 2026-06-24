@@ -38,6 +38,7 @@ export interface Testimonial {
   location: string;
   text: string;
   rating: number;
+  image?: string;
 }
 
 export const countries: Country[] = [
@@ -157,7 +158,7 @@ export const countries: Country[] = [
     id: "singapore",
     name: "Singapore",
     slug: "singapore",
-    image: "https://images.pexels.com/photos/777059/pexels-photo-777059.jpeg?auto=compress&cs=tinysrgb&w=800",
+    image: "https://images.unsplash.com/photo-1525625293386-3f8f99389edd?w=800&q=80",
     visaType: "Tourist Visa",
     processingTime: "3-7 working days",
     description: "Quick Singapore visa applications with personalized consultation.",
@@ -241,7 +242,7 @@ export const countries: Country[] = [
     id: "malaysia",
     name: "Malaysia",
     slug: "malaysia",
-    image: "https://images.pexels.com/photos/1287460/pexels-photo-1287460.jpeg?auto=compress&cs=tinysrgb&w=800",
+    image: "https://images.unsplash.com/photo-1595223262681-34a99977985a?w=800&q=80",
     visaType: "Tourist & Business Visa",
     processingTime: "3-7 working days",
     description: "Efficient Malaysia visa processing with high approval rates.",
@@ -395,7 +396,7 @@ export const countries: Country[] = [
     id: "bangladesh",
     name: "Bangladesh",
     slug: "bangladesh",
-    image: "https://images.pexels.com/photos/11794221/pexels-photo-11794221.jpeg?auto=compress&cs=tinysrgb&w=800",
+    image: "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=800&q=80",
     visaType: "Tourist & Business Visa",
     processingTime: "5-10 working days",
     description: "Bangladesh visa processing for tourism and business purposes.",
@@ -596,35 +597,41 @@ export const testimonials: Testimonial[] = [
     location: "Mumbai, India",
     text: "I was nervous about my US visa application, but the team at travelPaa made the process incredibly smooth. They reviewed every document and prepared me thoroughly for the interview. Got my visa approved without any issues!",
     rating: 5,
+    image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&q=80",
   },
   {
     name: "Ahmed Hassan",
     location: "Dubai, UAE",
     text: "Applied for a Schengen visa through travelPaa and was impressed by their professionalism. The document checklist was comprehensive and they caught a few errors I would have missed. Highly recommended.",
     rating: 5,
+    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&q=80",
   },
   {
     name: "Sarah Johnson",
     location: "London, UK",
     text: "Excellent service for my Australian student visa. The team guided me through the entire process from university selection to visa application. My visa was approved in just 2 weeks!",
     rating: 5,
+    image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&q=80",
   },
   {
     name: "Rajesh Patel",
     location: "Ahmedabad, India",
     text: "I've used travelPaa for three different visa applications and each time they've exceeded expectations. Their knowledge of different countries' requirements is outstanding.",
     rating: 4,
+    image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&q=80",
   },
   {
     name: "Yuki Tanaka",
     location: "Tokyo, Japan",
     text: "The Canada visitor visa process seemed daunting, but travelPaa broke it down into simple steps. Their consultant was always available to answer my questions. Very grateful for their support.",
     rating: 5,
+    image: "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=150&q=80",
   },
   {
     name: "Omar Al-Rashid",
     location: "Riyadh, Saudi Arabia",
     text: "Fast and reliable service for my UK business visa. The invitation letter template they provided was perfect. Visa was approved within 10 days. Will definitely use them again.",
     rating: 4,
+    image: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=150&q=80",
   },
 ];

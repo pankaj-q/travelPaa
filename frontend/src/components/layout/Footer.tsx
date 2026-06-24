@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { Globe2, Mail, Phone, MapPin } from "lucide-react";
+import { SocialIcon } from "@/components/ui/SocialIcon";
 
 const quickLinks = [
   { label: "Home", href: "/" },
@@ -20,11 +21,11 @@ const popularVisas = [
 ];
 
 const socials = [
-  { label: "Facebook", href: "https://facebook.com", icon: "FB" },
-  { label: "Twitter", href: "https://twitter.com", icon: "TW" },
-  { label: "Instagram", href: "https://instagram.com", icon: "IG" },
-  { label: "LinkedIn", href: "https://linkedin.com", icon: "LN" },
-  { label: "YouTube", href: "https://youtube.com", icon: "YT" },
+  { label: "Facebook", href: "https://facebook.com", icon: "facebook" },
+  { label: "Twitter", href: "https://twitter.com", icon: "twitter" },
+  { label: "Instagram", href: "https://instagram.com", icon: "instagram" },
+  { label: "LinkedIn", href: "https://linkedin.com", icon: "linkedin" },
+  { label: "YouTube", href: "https://youtube.com", icon: "youtube" },
 ];
 
 export function Footer() {
@@ -53,9 +54,9 @@ export function Footer() {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={label}
-                  className="flex h-9 w-9 items-center justify-center rounded-lg bg-white/10 text-[11px] font-bold tracking-wide text-white/70 transition-all hover:bg-coral hover:text-white"
+                  className="flex h-9 w-9 items-center justify-center rounded-lg bg-white/10 text-white/70 transition-all hover:bg-coral hover:text-white hover:shadow-lg hover:shadow-coral/25"
                 >
-                  {icon}
+                  <SocialIcon name={icon} />
                 </a>
               ))}
             </div>

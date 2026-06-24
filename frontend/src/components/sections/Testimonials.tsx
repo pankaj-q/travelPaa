@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { motion } from "framer-motion";
+import Image from "next/image";
+import { motion, AnimatePresence } from "framer-motion";
 import { Star, ChevronLeft, ChevronRight, Quote } from "lucide-react";
 import { testimonials } from "@/lib/data";
 import { SectionHeading } from "@/components/ui/SectionHeading";
@@ -13,8 +14,9 @@ export function Testimonials() {
   const next = () => setCurrent((c) => (c === testimonials.length - 1 ? 0 : c + 1));
 
   return (
-    <section id="testimonials" className="bg-muted-bg py-20 md:py-28">
-      <div className="mx-auto max-w-7xl px-4 lg:px-8">
+    <section id="testimonials" className="relative overflow-hidden bg-muted-bg py-20 md:py-28">
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_rgba(255,107,107,0.04),transparent_50%),radial-gradient(ellipse_at_bottom_left,_rgba(26,31,54,0.04),transparent_50%)]" />
+      <div className="relative z-10 mx-auto max-w-7xl px-4 lg:px-8">
         <SectionHeading
           badge="Testimonials"
           title="What Our Clients Say"
@@ -22,47 +24,63 @@ export function Testimonials() {
         />
 
         <div className="relative mx-auto mt-14 max-w-3xl">
-          <motion.div
-            key={current}
-            initial={{ opacity: 0, x: 40 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -40 }}
-            transition={{ duration: 0.3 }}
-            className="rounded-2xl border border-border/60 bg-surface p-8 shadow-md sm:p-12"
-          >
-            <Quote className="h-10 w-10 text-coral/20" />
-
-            <p className="mt-4 text-base leading-relaxed text-foreground/80 sm:text-lg">
-              &ldquo;{testimonials[current].text}&rdquo;
-            </p>
-
-            <div className="mt-6 flex items-center gap-1">
-              {Array.from({ length: 5 }).map((_, i) => (
-                <Star
-                  key={i}
-                  className={`h-4 w-4 ${
-                    i < testimonials[current].rating
-                      ? "fill-coral text-coral"
-                      : "text-border"
-                  }`}
-                />
-              ))}
-            </div>
-
-            <div className="mt-6 flex items-center gap-3">
-              <div className="flex h-11 w-11 items-center justify-center rounded-full bg-coral/10 text-sm font-bold text-coral">
-                {testimonials[current].name.charAt(0)}
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={current}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.35 }}
+              className="relative rounded-2xl border border-border/60 bg-surface p-8 shadow-md sm:p-12"
+            >
+              <div className="absolute -top-4 -left-4 flex h-12 w-12 items-center justify-center rounded-full bg-coral shadow-lg shadow-coral/25">
+                <Quote className="h-5 w-5 text-white" />
               </div>
-              <div>
-                <p className="text-sm font-bold text-foreground">
-                  {testimonials[current].name}
-                </p>
-                <p className="text-xs text-muted">
-                  {testimonials[current].location}
-                </p>
+
+              <div className="mt-4 flex items-center gap-0.5">
+                {Array.from({ length: 5 }).map((_, i) => (
+                  <Star
+                    key={i}
+                    className={`h-4 w-4 ${
+                      i < testimonials[current].rating
+                        ? "fill-coral text-coral"
+                        : "text-border"
+                    }`}
+                  />
+                ))}
               </div>
-            </div>
-          </motion.div>
+
+              <p className="mt-4 text-base leading-relaxed italic text-foreground/80 sm:text-lg">
+                &ldquo;{testimonials[current].text}&rdquo;
+              </p>
+
+              <div className="mt-8 flex items-center gap-4 border-t border-border/40 pt-6">
+                <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-full border-2 border-coral/30">
+                  {testimonials[current].image ? (
+                    <Image
+                      src={testimonials[current].image!}
+                      alt={testimonials[current].name}
+                      fill
+                      className="object-cover"
+                      sizes="48px"
+                    />
+                  ) : (
+                    <div className="flex h-full w-full items-center justify-center bg-coral/10 text-sm font-bold text-coral">
+                      {testimonials[current].name.charAt(0)}
+                    </div>
+                  )}
+                </div>
+                <div>
+                  <p className="text-sm font-bold text-foreground">
+                    {testimonials[current].name}
+                  </p>
+                  <p className="text-xs text-muted">
+                    {testimonials[current].location}
+                  </p>
+                </div>
+              </div>
+            </motion.div>
+          </AnimatePresence>
 
           <div className="mt-8 flex items-center justify-center gap-4">
             <button

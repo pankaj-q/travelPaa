@@ -3,13 +3,14 @@ import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { Mail, Phone, MapPin, Globe2 } from "lucide-react";
 import Link from "next/link";
+import { SocialIcon } from "@/components/ui/SocialIcon";
 
 const socials = [
-  { label: "Facebook", href: "https://facebook.com", icon: "FB" },
-  { label: "Twitter", href: "https://twitter.com", icon: "TW" },
-  { label: "Instagram", href: "https://instagram.com", icon: "IG" },
-  { label: "LinkedIn", href: "https://linkedin.com", icon: "LN" },
-  { label: "YouTube", href: "https://youtube.com", icon: "YT" },
+  { label: "Facebook", href: "https://facebook.com", icon: "facebook" },
+  { label: "Twitter", href: "https://twitter.com", icon: "twitter" },
+  { label: "Instagram", href: "https://instagram.com", icon: "instagram" },
+  { label: "LinkedIn", href: "https://linkedin.com", icon: "linkedin" },
+  { label: "YouTube", href: "https://youtube.com", icon: "youtube" },
 ];
 
 export default function ContactPage() {
@@ -88,9 +89,9 @@ export default function ContactPage() {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={label}
-                  className="flex h-12 w-12 items-center justify-center rounded-xl border border-border bg-surface text-sm font-bold text-muted shadow-sm transition-all hover:border-coral/40 hover:bg-coral/5 hover:text-coral"
+                  className="flex h-12 w-12 items-center justify-center rounded-xl border border-border bg-surface text-muted shadow-sm transition-all hover:border-coral/40 hover:bg-coral/5 hover:text-coral hover:shadow-lg hover:shadow-coral/10"
                 >
-                  {icon}
+                  <SocialIcon name={icon} />
                 </a>
               ))}
             </div>

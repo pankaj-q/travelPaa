@@ -33,6 +33,7 @@ function ApplyForm() {
   const [step, setStep] = useState(1);
   const [submitted, setSubmitted] = useState(false);
 
+  const [errors, setErrors] = useState<Record<string, string>>({});
   const [clientSecret, setClientSecret] = useState<string | null>(null);
   const [paymentLoading, setPaymentLoading] = useState(false);
   const [paymentError, setPaymentError] = useState<string | null>(null);
@@ -58,6 +59,25 @@ function ApplyForm() {
       setPaymentLoading(false);
     }
   }, []);
+
+  const validateStep = (stepNum: number): boolean => {
+    const newErrors: Record<string, string> = {};
+    if (stepNum === 1) {
+      const step1Fields = ["firstName", "lastName", "email", "phone", "dateOfBirth", "nationality", "passportNumber"];
+      step1Fields.forEach((f) => {
+        if (!form[f as keyof typeof form].trim()) newErrors[f] = "This field is required";
+      });
+      if (form.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) newErrors.email = "Enter a valid email address";
+    }
+    if (stepNum === 2) {
+      const step2Fields = ["source", "destination", "visaType", "travelDate", "duration", "purpose"];
+      step2Fields.forEach((f) => {
+        if (!form[f as keyof typeof form].trim()) newErrors[f] = "This field is required";
+      });
+    }
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
   const [form, setForm] = useState({
     firstName: "",
@@ -184,32 +204,30 @@ function ApplyForm() {
           const active = step >= s.num;
           const isCurrent = step === s.num;
           return (
-            <div key={s.num} className="flex flex-1 items-center">
-              <div className="flex flex-col items-center">
-                <div
-                  className={`relative flex h-9 w-9 items-center justify-center rounded-full transition-all duration-300 ${
-                    active
-                      ? "bg-coral text-white shadow-md shadow-coral/30"
-                      : "border-2 border-border/80 bg-surface text-muted"
-                  } ${isCurrent ? "ring-2 ring-coral/30 ring-offset-2 ring-offset-muted-bg" : ""}`}
-                >
-                  {step > s.num ? (
-                    <CheckCircle2 className="h-4 w-4" />
-                  ) : (
-                    <Icon className="h-4 w-4" />
-                  )}
-                </div>
-                <span
-                  className={`mt-2 hidden text-[10px] font-semibold uppercase tracking-[0.1em] sm:block ${
-                    active ? "text-coral" : "text-muted/70"
-                  }`}
-                >
-                  {s.label}
-                </span>
+            <div key={s.num} className="flex flex-col items-center flex-1">
+              <div
+                className={`relative flex h-10 w-10 items-center justify-center rounded-full transition-all duration-300 ${
+                  active
+                    ? "bg-coral text-white shadow-md shadow-coral/30"
+                    : "border-2 border-border/80 bg-surface text-muted"
+                } ${isCurrent ? "ring-2 ring-coral/30 ring-offset-2 ring-offset-muted-bg" : ""}`}
+              >
+                {step > s.num ? (
+                  <CheckCircle2 className="h-4 w-4" />
+                ) : (
+                  <Icon className="h-4" />
+                )}
               </div>
+              <span
+                className={`mt-2 hidden text-[10px] font-semibold uppercase tracking-[0.1em] sm:block ${
+                  active ? "text-coral" : "text-muted/70"
+                }`}
+              >
+                {s.label}
+              </span>
               {i < steps.length - 1 && (
                 <div
-                  className={`mx-3 h-px flex-1 transition-colors duration-300 ${
+                  className={`absolute top-[2.2rem] left-1/2 w-full h-0.5 -translate-x-1/2 transition-colors duration-300 ${
                     step > s.num ? "bg-coral/60" : "bg-border/60"
                   }`}
                 />
@@ -253,8 +271,15 @@ function ApplyForm() {
                       required={field.required}
                       value={form[field.id as keyof typeof form]}
                       onChange={(e) => update(field.id, e.target.value)}
-                      className="w-full rounded-xl border-2 border-border bg-surface px-4 py-3 text-sm text-foreground outline-none transition-all focus:border-coral focus:shadow-lg focus:shadow-coral/10"
+                      className={`w-full rounded-xl bg-surface px-4 py-3 text-sm text-foreground outline-none transition-all ${
+                        errors[field.id]
+                          ? "border-2 border-red-500 focus:border-red-500 focus:shadow-red-500/10"
+                          : "border-2 border-border focus:border-coral focus:shadow-lg focus:shadow-coral/10"
+                      }`}
                     />
+                    {errors[field.id] && (
+                      <p className="mt-1 text-xs text-red-500">{errors[field.id]}</p>
+                    )}
                   </div>
                 ))}
               </div>
@@ -560,7 +585,11 @@ function ApplyForm() {
             {step < 3 ? (
               <button
                 type="button"
-                onClick={() => setStep(step + 1)}
+                onClick={() => {
+                  if (validateStep(step)) {
+                    setStep(step + 1);
+                  }
+                }}
                 className="inline-flex items-center gap-2 rounded-lg bg-coral px-6 py-2.5 text-sm font-semibold text-white shadow-md shadow-coral/25 transition-all hover:bg-coral-dark hover:shadow-lg hover:shadow-coral/35"
               >
                 Continue
@@ -602,8 +631,15 @@ export default function ApplyPage() {
     <>
       <TopInfoBar />
       <Navbar />
-      <main className="min-h-screen bg-muted-bg py-12 md:py-20">
-        <div className="mx-auto max-w-7xl px-4 lg:px-8">
+      <main className="relative min-h-screen bg-muted-bg py-12 md:py-20">
+        <div
+          className="pointer-events-none absolute inset-0 bg-cover bg-center bg-fixed opacity-[0.04]"
+          style={{
+            backgroundImage:
+              "url(https://images.unsplash.com/photo-1556388158-158f5eac0a60?w=1920&q=80)",
+          }}
+        />
+        <div className="relative z-10 mx-auto max-w-7xl px-4 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}

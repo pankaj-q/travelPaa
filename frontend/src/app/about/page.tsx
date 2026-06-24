@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { TopInfoBar } from "@/components/layout/TopInfoBar";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
@@ -62,7 +63,19 @@ export default function AboutPage() {
               </p>
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="relative overflow-hidden rounded-2xl">
+              <Image
+                src="https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=800&q=80"
+                alt="Travel and visa consultation"
+                width={800}
+                height={500}
+                className="h-full w-full object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-tr from-coral/10 to-transparent" />
+            </div>
+          </div>
+
+          <div className="mt-12 grid grid-cols-2 gap-4">
               {stats.map((stat) => (
                 <div
                   key={stat.label}
@@ -73,7 +86,6 @@ export default function AboutPage() {
                 </div>
               ))}
             </div>
-          </div>
 
           <div className="mt-20">
             <h2 className="mb-4 text-center text-2xl font-bold text-foreground sm:text-3xl">

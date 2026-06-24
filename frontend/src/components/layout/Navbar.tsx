@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useSyncExternalStore } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -17,6 +17,13 @@ import { useTheme } from "@/components/providers/ThemeProvider";
 import { useAuth } from "@/contexts/AuthContext";
 import { countries } from "@/lib/data";
 
+const useIsClient = () =>
+  useSyncExternalStore(
+    () => () => {},
+    () => true,
+    () => false,
+  );
+
 const navLinks = [
   { href: "/", label: "Home" },
   { href: "/destinations", label: "Destinations" },
@@ -26,6 +33,7 @@ const navLinks = [
 ];
 
 export function Navbar() {
+  const isClient = useIsClient();
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [destDropdown, setDestDropdown] = useState(false);
@@ -129,18 +137,19 @@ export function Navbar() {
         </div>
 
         <div className="flex items-center gap-2">
-          <button
-            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-            aria-label="Toggle dark mode"
-            suppressHydrationWarning
-            className="flex h-9 w-9 items-center justify-center rounded-lg border border-border bg-surface transition-all hover:border-coral/40 hover:bg-coral/10"
-          >
-            {theme === "dark" ? (
-              <Sun className="h-3.5 w-3.5 text-coral" />
-            ) : (
-              <Moon className="h-3.5 w-3.5 text-navy" />
-            )}
-          </button>
+          {isClient && (
+            <button
+              onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+              aria-label="Toggle dark mode"
+              className="flex h-9 w-9 items-center justify-center rounded-lg border border-border bg-surface transition-all hover:border-coral/40 hover:bg-coral/10"
+            >
+              {theme === "dark" ? (
+                <Sun className="h-3.5 w-3.5 text-coral" />
+              ) : (
+                <Moon className="h-3.5 w-3.5 text-navy" />
+              )}
+            </button>
+          )}
 
           {user ? (
             <div className="hidden items-center gap-3 sm:flex">
@@ -190,20 +199,20 @@ export function Navbar() {
       <AnimatePresence>
         {mobileOpen && (
           <motion.div
-            initial={{ opacity: 0, y: -8 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -8 }}
+            initial={{ opacity: 0, y: -8, scale: 0.96 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -8, scale: 0.96 }}
             transition={{ duration: 0.2 }}
-            className="overflow-hidden border-t border-border/60 lg:hidden will-change-transform"
+            className="absolute right-4 top-full z-50 w-72 overflow-hidden rounded-2xl border border-border/60 bg-surface shadow-xl lg:hidden"
           >
-            <div className="space-y-1 px-4 py-4">
+            <div className="space-y-0.5 px-3 py-3">
               {navLinks.map((link) => {
                 if (link.label === "Destinations") {
                   return (
                     <div key={link.label}>
                       <button
                         onClick={() => setDestDropdownMobile(!destDropdownMobile)}
-                        className="flex w-full items-center justify-between rounded-lg px-4 py-3 text-sm font-medium text-foreground/70 transition-colors hover:bg-coral/[0.06] hover:text-coral"
+                        className="flex w-full items-center justify-between rounded-lg px-3 py-2.5 text-sm font-medium text-foreground/70 transition-colors hover:bg-coral/[0.06] hover:text-coral"
                       >
                         {link.label}
                         <ChevronDown className={`h-4 w-4 transition-transform ${destDropdownMobile ? "rotate-180" : ""}`} />
@@ -239,7 +248,7 @@ export function Navbar() {
                     key={link.href}
                     href={link.href}
                     onClick={() => setMobileOpen(false)}
-                    className="flex items-center justify-between rounded-lg px-4 py-3 text-sm font-medium text-foreground/70 transition-colors hover:bg-coral/[0.06] hover:text-coral"
+                    className="flex items-center justify-between rounded-lg px-3 py-2.5 text-sm font-medium text-foreground/70 transition-colors hover:bg-coral/[0.06] hover:text-coral"
                   >
                     {link.label}
                   </Link>
@@ -247,14 +256,14 @@ export function Navbar() {
               })}
 
               {user ? (
-                <div className="mt-3 space-y-2">
-                  <div className="flex items-center gap-2 rounded-lg bg-coral/10 px-4 py-3">
+                <div className="mt-2 space-y-1.5 border-t border-border/40 pt-2">
+                  <div className="flex items-center gap-2 rounded-lg bg-coral/10 px-3 py-2.5">
                     <User className="h-4 w-4 text-coral" />
                     <span className="text-sm font-medium text-foreground">{user.name}</span>
                   </div>
                   <button
                     onClick={() => { handleLogout(); setMobileOpen(false); }}
-                    className="flex w-full items-center justify-center gap-2 rounded-lg border border-border px-4 py-3 text-sm font-medium text-muted transition-all hover:border-coral/40 hover:text-coral"
+                    className="flex w-full items-center justify-center gap-2 rounded-lg border border-border px-3 py-2.5 text-sm font-medium text-muted transition-all hover:border-coral/40 hover:text-coral"
                   >
                     <LogOut className="h-4 w-4" />
                     Logout
@@ -264,7 +273,7 @@ export function Navbar() {
                 <Link
                   href="/auth/login"
                   onClick={() => setMobileOpen(false)}
-                  className="mt-3 block rounded-lg border border-coral/30 bg-coral px-4 py-3 text-center text-sm font-semibold text-white"
+                  className="mt-2 block rounded-lg border border-coral/30 bg-coral px-3 py-2.5 text-center text-sm font-semibold text-white"
                 >
                   Login
                 </Link>
@@ -273,7 +282,7 @@ export function Navbar() {
               <Link
                 href="/apply"
                 onClick={() => setMobileOpen(false)}
-                className="block rounded-lg bg-coral px-4 py-3 text-center text-sm font-semibold text-white shadow-md shadow-coral/30 transition-all hover:bg-coral-dark"
+                className="block rounded-lg bg-coral px-3 py-2.5 text-center text-sm font-semibold text-white shadow-sm shadow-coral/30 transition-all hover:bg-coral-dark"
               >
                 Apply Now
               </Link>

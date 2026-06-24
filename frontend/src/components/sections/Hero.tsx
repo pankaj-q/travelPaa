@@ -10,15 +10,26 @@ export function Hero() {
       id="home"
       className="relative flex min-h-[88vh] items-center overflow-hidden"
     >
-      <div
-        className="absolute inset-0 bg-gradient-to-br from-navy to-navy-dark bg-cover bg-center"
-        style={{
-          backgroundImage:
-            "url(https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=1920&q=80)",
-        }}
-      >
+      <div className="absolute inset-0 bg-navy-dark">
+        <div
+          className="absolute inset-0 bg-cover bg-center opacity-30"
+          style={{
+            backgroundImage:
+              "url(https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=1920&q=80)",
+          }}
+        />
         <div className="absolute inset-0 bg-gradient-to-r from-navy/95 via-navy/85 to-navy/70 dark:from-navy-dark/95 dark:via-navy-dark/85 dark:to-navy-dark/70" />
-        <div className="hero-pattern absolute inset-0" />
+        {/* Connected dots pattern */}
+        <svg className="absolute inset-0 h-full w-full opacity-20" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <pattern id="dots-grid" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
+              <circle cx="2" cy="2" r="1.5" fill="rgba(255,255,255,0.5)" />
+            </pattern>
+          </defs>
+          <rect width="100%" height="100%" fill="url(#dots-grid)" />
+          <line x1="0" y1="0" x2="100%" y2="0" stroke="rgba(255,255,255,0.06)" strokeWidth="0.5" />
+          <line x1="0" y1="0" x2="0" y2="100%" stroke="rgba(255,255,255,0.06)" strokeWidth="0.5" />
+        </svg>
       </div>
 
       <div className="relative z-10 mx-auto w-full max-w-7xl px-4 py-20 lg:px-8 lg:py-28">
