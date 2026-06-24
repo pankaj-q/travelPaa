@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { ImageOff, Globe } from "lucide-react";
+import { Globe } from "lucide-react";
 import { countries } from "@/lib/data";
 
 export function CountriesServed() {

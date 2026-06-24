@@ -73,7 +73,7 @@ export async function confirmPayment(userId: string, paymentIntentId: string, ap
     });
     await tx.application.update({
       where: { id: applicationId },
-      data: { status: "REVIEWED" },
+      data: { status: "UNDER_REVIEW" },
     });
     return p;
   });
@@ -97,7 +97,7 @@ export async function handleWebhookEvent(event: StripeEvent) {
           }),
           prisma.application.update({
             where: { id: applicationId },
-            data: { status: "REVIEWED" },
+            data: { status: "UNDER_REVIEW" },
           }),
         ]);
       }
@@ -145,7 +145,7 @@ export async function getPaymentHistory(userId: string, page = 1, limit = 20) {
 export async function getAdminStats() {
   const [totalApps, pendingApps, totalPayments, revenueAgg] = await Promise.all([
     prisma.application.count({ where: { deletedAt: null } }),
-    prisma.application.count({ where: { status: "PENDING", deletedAt: null } }),
+    prisma.application.count({ where: { status: "DOCUMENTS_PENDING", deletedAt: null } }),
     prisma.payment.count({ where: { status: "COMPLETED" } }),
     prisma.payment.aggregate({
       where: { status: "COMPLETED" },

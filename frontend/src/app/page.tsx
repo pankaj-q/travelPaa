@@ -2,13 +2,12 @@ import { TopInfoBar } from "@/components/layout/TopInfoBar";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { Hero } from "@/components/sections/Hero";
-import { RouteFinder } from "@/components/sections/RouteFinder";
-import { Services } from "@/components/sections/Services";
-import { About } from "@/components/sections/About";
-import { VisaCategories } from "@/components/sections/VisaCategories";
-import { CountryCards } from "@/components/sections/CountryCards";
-import { CountriesServed } from "@/components/sections/CountriesServed";
-import { countries } from "@/lib/data";
+import { InstantVisaChecker } from "@/components/sections/InstantVisaChecker";
+import { HowItWorks } from "@/components/sections/HowItWorks";
+import { PopularDestinations } from "@/components/sections/PopularDestinations";
+import { WhyChooseUs } from "@/components/sections/WhyChooseUs";
+import { Testimonials } from "@/components/sections/Testimonials";
+import { Disclaimer } from "@/components/sections/Disclaimer";
 
 export default function Home() {
   return (
@@ -17,12 +16,12 @@ export default function Home() {
       <Navbar />
       <main>
         <Hero />
-        <RouteFinder />
-        <Services />
-        <About />
-        <VisaCategories />
-        <CountryCards countries={countries} />
-        <CountriesServed />
+        <InstantVisaChecker />
+        <HowItWorks />
+        <PopularDestinations />
+        <WhyChooseUs />
+        <Testimonials />
+        <Disclaimer />
       </main>
       <Footer />
     </>

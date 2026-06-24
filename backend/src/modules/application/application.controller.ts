@@ -3,6 +3,7 @@ import {
   createApplication,
   getUserApplications,
   getApplicationById,
+  trackApplication,
 } from "./application.service";
 import { asyncHandler } from "../../shared/utils/asyncHandler";
 
@@ -21,4 +22,10 @@ export const list = asyncHandler(async (req: Request, res: Response) => {
 export const getById = asyncHandler(async (req: Request, res: Response) => {
   const app = await getApplicationById(req.user!.userId, req.params.id as string);
   res.json({ application: app });
+});
+
+export const track = asyncHandler(async (req: Request, res: Response) => {
+  const { applicationNumber, dateOfBirth, passportNumber } = req.body;
+  const result = await trackApplication(applicationNumber, dateOfBirth, passportNumber);
+  res.json(result);
 });

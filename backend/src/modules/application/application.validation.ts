@@ -19,8 +19,22 @@ export const createApplicationSchema = z.object({
 });
 
 export const updateStatusSchema = z.object({
-  status: z.enum(["PENDING", "REVIEWED", "APPROVED", "REJECTED"]),
+  status: z.enum([
+    "DOCUMENTS_PENDING",
+    "UNDER_REVIEW",
+    "SUBMITTED_TO_EMBASSY",
+    "IN_EMBASSY",
+    "APPROVED",
+    "REJECTED",
+    "DELIVERED",
+  ]),
   adminNotes: z.string().optional(),
+});
+
+export const trackApplicationSchema = z.object({
+  applicationNumber: z.string().min(1, "Application number is required"),
+  dateOfBirth: z.string().refine((val) => !isNaN(Date.parse(val)), "Invalid date"),
+  passportNumber: z.string().min(1, "Passport number is required"),
 });
 
 export type CreateApplicationInput = z.infer<typeof createApplicationSchema>;

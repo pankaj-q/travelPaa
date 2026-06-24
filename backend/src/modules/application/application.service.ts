@@ -2,15 +2,71 @@ import { prisma } from "../../config/database";
 import { AppError } from "../../shared/utils/AppError";
 import type { CreateApplicationInput } from "./application.validation";
 
+async function generateApplicationNumber(): Promise<string> {
+  const latest = await prisma.application.findFirst({
+    orderBy: { createdAt: "desc" },
+    select: { applicationNumber: true },
+  });
+  let nextNum = 1;
+  if (latest?.applicationNumber) {
+    const num = parseInt(latest.applicationNumber.replace("APP-", ""), 10);
+    if (!isNaN(num)) nextNum = num + 1;
+  }
+  return `APP-${String(nextNum).padStart(6, "0")}`;
+}
+
 export async function createApplication(userId: string, input: CreateApplicationInput) {
+  const applicationNumber = await generateApplicationNumber();
   return prisma.application.create({
     data: {
       userId,
+      applicationNumber,
       ...input,
       dateOfBirth: new Date(input.dateOfBirth),
       travelDate: new Date(input.travelDate),
     },
   });
+}
+
+export async function trackApplication(
+  applicationNumber: string,
+  dateOfBirth: string,
+  passportNumber: string,
+) {
+  const app = await prisma.application.findFirst({
+    where: {
+      applicationNumber,
+      passportNumber,
+      deletedAt: null,
+    },
+    select: {
+      applicationNumber: true,
+      status: true,
+      destination: true,
+      visaType: true,
+      createdAt: true,
+      updatedAt: true,
+      dateOfBirth: true,
+    },
+  });
+
+  if (!app) {
+    throw AppError.notFound("Application not found. Please verify your details.");
+  }
+
+  const dobStr = app.dateOfBirth.toISOString().split("T")[0];
+  if (dobStr !== dateOfBirth) {
+    throw AppError.notFound("Application not found. Please verify your details.");
+  }
+
+  return {
+    status: app.status,
+    appNumber: app.applicationNumber,
+    destination: app.destination,
+    visaType: app.visaType,
+    submittedAt: app.createdAt,
+    updatedAt: app.updatedAt,
+  };
 }
 
 export async function getUserApplications(
