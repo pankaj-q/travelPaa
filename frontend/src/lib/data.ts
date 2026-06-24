@@ -200,7 +200,7 @@ export const countries: Country[] = [
     id: "saudi-arabia",
     name: "Saudi Arabia",
     slug: "saudi-arabia",
-    image: "https://images.unsplash.com/photo-1590402494582-2c6f297b6a8d?w=800&q=80",
+    image: "https://images.unsplash.com/photo-1539650116574-8efeb43e2750?w=800&q=80",
     visaType: "Tourist & Business Visa",
     processingTime: "2-5 working days",
     description: "Quick Saudi Arabia visa processing including Umrah and business visas.",

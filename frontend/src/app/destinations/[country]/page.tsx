@@ -92,7 +92,7 @@ export default function DestinationDetailPage() {
             className="object-cover"
             priority
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-navy/90 via-navy/70 to-navy/50" />
+          <div className="absolute inset-0 bg-gradient-to-r from-navy/95 via-navy/85 to-navy/70" />
           <div className="relative z-10 mx-auto w-full max-w-7xl px-4 lg:px-8">
             <Link
               href="/destinations"
@@ -100,10 +100,10 @@ export default function DestinationDetailPage() {
             >
               <ArrowLeft className="h-4 w-4" /> Back to Destinations
             </Link>
-            <h1 className="text-3xl font-bold text-white sm:text-4xl lg:text-5xl">
+            <h1 className="text-3xl font-bold text-white sm:text-4xl lg:text-5xl drop-shadow-lg">
               {country.name} Visa
             </h1>
-            <p className="mt-3 max-w-2xl text-base text-white/80">
+            <p className="mt-3 max-w-2xl text-base text-white/90 drop-shadow-md">
               {data.description}
             </p>
           </div>

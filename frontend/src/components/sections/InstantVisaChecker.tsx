@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { ArrowRight, Search, Plane } from "lucide-react";
@@ -16,6 +16,21 @@ export function InstantVisaChecker() {
   const [showDestination, setShowDestination] = useState(false);
   const [nationalitySearch, setNationalitySearch] = useState("");
   const [destinationSearch, setDestinationSearch] = useState("");
+  const nationalityRef = useRef<HTMLDivElement>(null);
+  const destinationRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (nationalityRef.current && !nationalityRef.current.contains(e.target as Node)) {
+        setShowNationality(false);
+      }
+      if (destinationRef.current && !destinationRef.current.contains(e.target as Node)) {
+        setShowDestination(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   const filteredNationalities = useMemo(() => {
     if (!nationalitySearch) return destinationCountries;
@@ -51,7 +66,7 @@ export function InstantVisaChecker() {
         transition={{ duration: 0.6 }}
         className="mx-auto max-w-4xl"
       >
-        <div className="overflow-hidden rounded-2xl border border-border/60 bg-surface shadow-lg shadow-black/5 dark:shadow-black/20">
+        <div className="rounded-2xl border border-border/60 bg-surface shadow-lg shadow-black/5 dark:shadow-black/20">
           <div className="flex items-center gap-3 border-b border-border/50 px-6 py-4">
             <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-coral/10">
               <Search className="h-4 w-4 text-coral" />
@@ -85,7 +100,7 @@ export function InstantVisaChecker() {
                     className="w-full rounded-xl border-2 border-border bg-surface px-4 py-3.5 pr-10 text-sm font-medium text-foreground outline-none transition-all focus:border-coral focus:shadow-lg focus:shadow-coral/10"
                   />
                   {showNationality && (
-                    <div className="absolute left-0 top-full z-30 mt-1 max-h-52 w-full overflow-y-auto rounded-xl border border-border/60 bg-surface shadow-lg">
+                    <div ref={nationalityRef} className="absolute left-0 top-full z-30 mt-1 max-h-52 w-full overflow-y-auto rounded-xl border border-border/60 bg-surface shadow-lg">
                       {nationality && !destinationCountries.includes(nationality) && (
                         <div className="flex flex-wrap gap-1.5 border-b border-border/40 px-3 py-2">
                           {popularOrigins.filter((o) => o.toLowerCase().includes(nationalitySearch.toLowerCase())).map((p) => (
@@ -144,7 +159,7 @@ export function InstantVisaChecker() {
                     className="w-full rounded-xl border-2 border-border bg-surface px-4 py-3.5 pr-10 text-sm font-medium text-foreground outline-none transition-all focus:border-coral focus:shadow-lg focus:shadow-coral/10"
                   />
                   {showDestination && (
-                    <div className="absolute left-0 top-full z-30 mt-1 max-h-52 w-full overflow-y-auto rounded-xl border border-border/60 bg-surface shadow-lg">
+                    <div ref={destinationRef} className="absolute left-0 top-full z-30 mt-1 max-h-52 w-full overflow-y-auto rounded-xl border border-border/60 bg-surface shadow-lg">
                       {filteredDestinations.map((name) => (
                         <button
                           key={name}
