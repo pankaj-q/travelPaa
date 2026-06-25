@@ -1,0 +1,30 @@
+services:
+  - type: web
+    name: travelpaa-backend
+    rootDir: backend
+    env: node
+    buildCommand: npm ci && npm run build
+    startCommand: npm start
+    envVars:
+      - key: DATABASE_URL
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: JWT_REFRESH_SECRET
+        sync: false
+      - key: STRIPE_SECRET_KEY
+        sync: false
+      - key: STRIPE_WEBHOOK_SECRET
+        sync: false
+      - key: CORS_ORIGIN
+        sync: false
+      - key: STRIPE_AMOUNT_CENTS
+        value: "5000"
+      - key: NODE_ENV
+        value: "production"
+      - key: RESEND_API_KEY
+        sync: false
+      - key: RESEND_FROM
+        sync: false
+      - key: REDIS_URL
+        sync: false
