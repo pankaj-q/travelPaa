@@ -16,7 +16,13 @@ import {
   Eye,
   EyeOff,
   UserPlus,
+  AlertCircle,
 } from "lucide-react";
+
+interface ValidationError {
+  field: string;
+  message: string;
+}
 
 function RegisterForm() {
   const router = useRouter();
@@ -29,6 +35,7 @@ function RegisterForm() {
   const [phone, setPhone] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(false);
 
   const redirect = searchParams.get("redirect") || "/";
@@ -36,16 +43,26 @@ function RegisterForm() {
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setError("");
+    setFieldErrors({});
     setLoading(true);
     try {
       await register({ name, email, password, phone: phone || undefined });
       router.push(redirect);
     } catch (err) {
-      setError(
-        err instanceof ApiError
-          ? err.message
-          : "Registration failed. Please try again."
-      );
+      if (err instanceof ApiError) {
+        setError(err.message);
+        // Check for validation details
+        const errData = err as ApiError & { details?: ValidationError[] };
+        if (errData.details) {
+          const errors: Record<string, string> = {};
+          errData.details.forEach((d) => {
+            errors[d.field] = d.message;
+          });
+          setFieldErrors(errors);
+        }
+      } else {
+        setError("Registration failed. Please try again.");
+      }
     } finally {
       setLoading(false);
     }
@@ -83,7 +100,10 @@ function RegisterForm() {
                 animate={{ opacity: 1, height: "auto" }}
                 className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-xs text-red-700 dark:border-red-900/50 dark:bg-red-950/30 dark:text-red-400"
               >
-                {error}
+                <div className="flex items-start gap-2">
+                  <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-red-500" />
+                  <span>{error}</span>
+                </div>
               </motion.div>
             )}
 
@@ -103,9 +123,16 @@ function RegisterForm() {
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   placeholder="John Doe"
-                  className="w-full rounded-xl border-2 border-border bg-surface py-3 pl-10 pr-4 text-sm text-foreground outline-none transition-all focus:border-coral focus:shadow-lg focus:shadow-coral/10"
+                  className={`w-full rounded-xl bg-surface py-3 pl-10 pr-4 text-sm text-foreground outline-none transition-all ${
+                    fieldErrors.name
+                      ? "border-2 border-red-500 focus:border-red-500 focus:shadow-red-500/10"
+                      : "border-2 border-border focus:border-coral focus:shadow-lg focus:shadow-coral/10"
+                  }`}
                 />
               </div>
+              {fieldErrors.name && (
+                <p className="mt-1 text-xs text-red-500">{fieldErrors.name}</p>
+              )}
             </div>
 
             <div>
@@ -124,9 +151,16 @@ function RegisterForm() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="you@example.com"
-                  className="w-full rounded-xl border-2 border-border bg-surface py-3 pl-10 pr-4 text-sm text-foreground outline-none transition-all focus:border-coral focus:shadow-lg focus:shadow-coral/10"
+                  className={`w-full rounded-xl bg-surface py-3 pl-10 pr-4 text-sm text-foreground outline-none transition-all ${
+                    fieldErrors.email
+                      ? "border-2 border-red-500 focus:border-red-500 focus:shadow-red-500/10"
+                      : "border-2 border-border focus:border-coral focus:shadow-lg focus:shadow-coral/10"
+                  }`}
                 />
               </div>
+              {fieldErrors.email && (
+                <p className="mt-1 text-xs text-red-500">{fieldErrors.email}</p>
+              )}
             </div>
 
             <div>
@@ -146,7 +180,11 @@ function RegisterForm() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Min. 8 characters"
-                  className="w-full rounded-xl border-2 border-border bg-surface py-3 pl-10 pr-10 text-sm text-foreground outline-none transition-all focus:border-coral focus:shadow-lg focus:shadow-coral/10"
+                  className={`w-full rounded-xl bg-surface py-3 pl-10 pr-10 text-sm text-foreground outline-none transition-all ${
+                    fieldErrors.password
+                      ? "border-2 border-red-500 focus:border-red-500 focus:shadow-red-500/10"
+                      : "border-2 border-border focus:border-coral focus:shadow-lg focus:shadow-coral/10"
+                  }`}
                 />
                 <button
                   type="button"
@@ -160,6 +198,9 @@ function RegisterForm() {
                   )}
                 </button>
               </div>
+              {fieldErrors.password && (
+                <p className="mt-1 text-xs text-red-500">{fieldErrors.password}</p>
+              )}
             </div>
 
             <div>
@@ -177,9 +218,16 @@ function RegisterForm() {
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
                   placeholder="+1 (555) 000-0000"
-                  className="w-full rounded-xl border-2 border-border bg-surface py-3 pl-10 pr-4 text-sm text-foreground outline-none transition-all focus:border-coral focus:shadow-lg focus:shadow-coral/10"
+                  className={`w-full rounded-xl bg-surface py-3 pl-10 pr-4 text-sm text-foreground outline-none transition-all ${
+                    fieldErrors.phone
+                      ? "border-2 border-red-500 focus:border-red-500 focus:shadow-red-500/10"
+                      : "border-2 border-border focus:border-coral focus:shadow-lg focus:shadow-coral/10"
+                  }`}
                 />
               </div>
+              {fieldErrors.phone && (
+                <p className="mt-1 text-xs text-red-500">{fieldErrors.phone}</p>
+              )}
             </div>
 
             <button

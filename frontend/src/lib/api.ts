@@ -1,7 +1,11 @@
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000/api/v1";
 
 export class ApiError extends Error {
-  constructor(public status: number, message: string) {
+  constructor(
+    public status: number,
+    message: string,
+    public details?: Array<{ field: string; message: string }>
+  ) {
     super(message);
     this.name = "ApiError";
   }
@@ -54,10 +58,7 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
         const err = await retryRes
           .json()
           .catch(() => ({ error: "Request failed" }));
-        throw new ApiError(
-          retryRes.status,
-          err.error ?? "Request failed"
-        );
+        throw new ApiError(retryRes.status, err.error ?? "Request failed", err.details);
       }
       return retryRes.json();
     }
@@ -67,7 +68,7 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
 
   if (!res.ok) {
     const err = await res.json().catch(() => ({ error: "Request failed" }));
-    throw new ApiError(res.status, err.error ?? "Request failed");
+    throw new ApiError(res.status, err.error ?? "Request failed", err.details);
   }
 
   return res.json();
