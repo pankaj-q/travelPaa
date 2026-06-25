@@ -167,12 +167,20 @@ export function Navbar() {
               </button>
             </div>
           ) : (
-            <Link
-              href="/auth/login"
-              className="hidden rounded-lg border border-coral/30 bg-coral px-5 py-2.5 text-sm font-semibold text-white shadow-md shadow-coral/30 transition-all hover:bg-coral-dark hover:shadow-lg hover:shadow-coral/40 sm:inline-flex"
-            >
-              Login
-            </Link>
+            <div className="hidden items-center gap-2 sm:flex">
+              <Link
+                href="/auth/login"
+                className="rounded-lg border border-border/80 bg-surface px-5 py-2.5 text-sm font-semibold text-foreground/70 transition-all hover:border-coral/40 hover:bg-coral/5 hover:text-coral"
+              >
+                Login
+              </Link>
+              <Link
+                href="/auth/register"
+                className="rounded-lg bg-coral px-5 py-2.5 text-sm font-semibold text-white shadow-md shadow-coral/30 transition-all hover:bg-coral-dark hover:shadow-lg hover:shadow-coral/40"
+              >
+                Sign Up
+              </Link>
+            </div>
           )}
 
           <Link
@@ -270,13 +278,22 @@ export function Navbar() {
                   </button>
                 </div>
               ) : (
-                <Link
-                  href="/auth/login"
-                  onClick={() => setMobileOpen(false)}
-                  className="mt-2 block rounded-lg border border-coral/30 bg-coral px-3 py-2.5 text-center text-sm font-semibold text-white"
-                >
-                  Login
-                </Link>
+                <div className="mt-2 space-y-2">
+                  <Link
+                    href="/auth/login"
+                    onClick={() => setMobileOpen(false)}
+                    className="block rounded-lg border border-border/80 bg-surface px-3 py-2.5 text-center text-sm font-semibold text-foreground/70 transition-all hover:border-coral/40 hover:bg-coral/5 hover:text-coral"
+                  >
+                    Login
+                  </Link>
+                  <Link
+                    href="/auth/register"
+                    onClick={() => setMobileOpen(false)}
+                    className="block rounded-lg bg-coral px-3 py-2.5 text-center text-sm font-semibold text-white shadow-sm shadow-coral/30 transition-all hover:bg-coral-dark"
+                  >
+                    Sign Up
+                  </Link>
+                </div>
               )}
 
               <Link

@@ -56,17 +56,22 @@ export function PaymentForm({
       return;
     }
 
-        if (paymentIntent?.status === "succeeded") {
-          try {
-            // Call onSuccess with paymentIntentId for backend confirmation
-            onSuccess(paymentIntent.id);
-          } catch (err) {
-            const msg =
-              err instanceof Error ? err.message : "Confirmation failed";
-            setErrorMessage(msg);
-            onError(msg);
-          }
-        } else {
+    if (paymentIntent?.status === "succeeded") {
+      try {
+        // Call onSuccess with paymentIntentId for backend confirmation
+        onSuccess(paymentIntent.id);
+      } catch (err) {
+        const msg = err instanceof Error ? err.message : "Confirmation failed";
+        setErrorMessage(msg);
+        onError(msg);
+      }
+    } else if (paymentIntent?.status === "requires_action") {
+      // 3D Secure or additional authentication needed
+      const msg = "Additional authentication required";
+      setErrorMessage(msg);
+      onError(msg);
+    } else {
+      // Handle other statuses: processing, requires_payment_method, canceled, etc.
       const msg = `Payment ${paymentIntent?.status ?? "failed"}`;
       setErrorMessage(msg);
       onError(msg);
