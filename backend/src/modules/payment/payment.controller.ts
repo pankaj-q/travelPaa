@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { stripe } from "../../config/stripe";
 import { env } from "../../config/env";
-import { createPaymentIntent, confirmPayment, getPaymentHistory } from "./payment.service";
+import { createPaymentIntent, confirmPayment, getPaymentHistory, handleWebhookEvent } from "./payment.service";
 import { asyncHandler } from "../../shared/utils/asyncHandler";
 
 export const createIntent = asyncHandler(async (req: Request, res: Response) => {
@@ -32,11 +32,11 @@ export async function webhook(req: Request, res: Response) {
 
   try {
     const event = stripe.webhooks.constructEvent(req.body, sig, env.STRIPE_WEBHOOK_SECRET);
-    const { handleWebhookEvent } = await import("./payment.service");
-    await handleWebhookEvent(event as unknown as { type: string; data: { object: Record<string, unknown> } });
+    await handleWebhookEvent(event as unknown as { type: string; data: { object: Record<string, unknown> }; id: string });
     res.json({ received: true });
   } catch (err) {
     const message = err instanceof Error ? err.message : "Webhook error";
-    res.status(400).json({ error: message });
+    // Always return 200 to prevent Stripe retries for signature verification failures
+    res.status(200).json({ error: message });
   }
 }

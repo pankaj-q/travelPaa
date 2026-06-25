@@ -11,14 +11,12 @@ import { CreditCard, CheckCircle2, AlertCircle, Loader2 } from "lucide-react";
 
 interface PaymentFormProps {
   amount: number;
-  applicationId: string;
-  onSuccess: () => void;
+  onSuccess: (paymentIntentId: string) => void;
   onError: (message: string) => void;
 }
 
 export function PaymentForm({
   amount,
-  applicationId,
   onSuccess,
   onError,
 }: PaymentFormProps) {
@@ -58,30 +56,17 @@ export function PaymentForm({
       return;
     }
 
-    if (paymentIntent?.status === "succeeded") {
-      try {
-        const res = await fetch("/api/confirm-payment", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            paymentIntentId: paymentIntent.id,
-            applicationId,
-          }),
-        });
-
-        if (!res.ok) {
-          const data = await res.json();
-          throw new Error(data.error ?? "Confirmation failed");
-        }
-
-        onSuccess();
-      } catch (err) {
-        const msg =
-          err instanceof Error ? err.message : "Confirmation failed";
-        setErrorMessage(msg);
-        onError(msg);
-      }
-    } else {
+        if (paymentIntent?.status === "succeeded") {
+          try {
+            // Call onSuccess with paymentIntentId for backend confirmation
+            onSuccess(paymentIntent.id);
+          } catch (err) {
+            const msg =
+              err instanceof Error ? err.message : "Confirmation failed";
+            setErrorMessage(msg);
+            onError(msg);
+          }
+        } else {
       const msg = `Payment ${paymentIntent?.status ?? "failed"}`;
       setErrorMessage(msg);
       onError(msg);

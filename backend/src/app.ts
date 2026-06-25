@@ -13,11 +13,45 @@ import contactRoutes from "./modules/contact/contact.routes";
 
 const app = express();
 
-app.use(helmet());
-app.use(cors({ origin: env.CORS_ORIGIN, credentials: true }));
+// Security headers
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: ["'self'", "'unsafe-inline'"],
+      styleSrc: ["'self'", "'unsafe-inline'"],
+      imgSrc: ["'self'", "data:", "https:"],
+      connectSrc: ["'self'"],
+      fontSrc: ["'self'"],
+      objectSrc: ["'none'"],
+      frameAncestors: ["'none'"],
+    },
+  },
+  hsts: {
+    maxAge: 31536000,
+    includeSubDomains: true,
+    preload: true,
+  },
+  referrerPolicy: { policy: "strict-origin-when-cross-origin" },
+}));
+
+// CORS - support multiple origins (comma-separated for Vercel previews)
+const corsOrigins = env.CORS_ORIGIN.split(",").map((o) => o.trim());
+app.use(cors({
+  origin: (origin, callback) => {
+    if (!origin || corsOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  credentials: true,
+}));
+
 app.use(cookieParser());
 app.use(apiLimiter);
 
+// Stripe webhook needs raw body BEFORE express.json()
 app.post("/api/v1/payments/webhooks/stripe", express.raw({ type: "application/json" }));
 app.use(express.json());
 

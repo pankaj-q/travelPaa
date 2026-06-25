@@ -2,12 +2,38 @@ import { prisma } from "../../config/database";
 import { stripe } from "../../config/stripe";
 import { env } from "../../config/env";
 import { AppError } from "../../shared/utils/AppError";
+import crypto from "crypto";
 
 interface StripeEvent {
+  id: string;
   type: string;
   data: {
     object: Record<string, unknown>;
   };
+}
+
+function generateIdempotencyKey(applicationId: string, userId: string): string {
+  return `pi_${applicationId}_${userId}_${Date.now()}_${crypto.randomBytes(4).toString("hex")}`;
+}
+
+async function recordWebhookEvent(eventId: string, eventType: string, payload: Record<string, unknown>) {
+  await prisma.webhookEvent.create({
+    data: {
+      stripeEventId: eventId,
+      eventType,
+      payload: payload as any,
+    },
+  }).catch(() => {
+    // Ignore duplicate key errors - event already processed
+  });
+}
+
+async function isWebhookProcessed(eventId: string): Promise<boolean> {
+  const existing = await prisma.webhookEvent.findUnique({
+    where: { stripeEventId: eventId },
+    select: { id: true },
+  });
+  return !!existing;
 }
 
 export async function createPaymentIntent(userId: string, applicationId: string) {
@@ -26,11 +52,14 @@ export async function createPaymentIntent(userId: string, applicationId: string)
   }
 
   const amount = env.STRIPE_AMOUNT_CENTS;
+  const idempotencyKey = generateIdempotencyKey(applicationId, userId);
 
   const paymentIntent = await stripe.paymentIntents.create({
     amount,
     currency: env.STRIPE_CURRENCY,
     metadata: { applicationId, userId },
+  }, {
+    idempotencyKey,
   });
 
   await prisma.payment.upsert({
@@ -39,6 +68,7 @@ export async function createPaymentIntent(userId: string, applicationId: string)
       stripePaymentIntentId: paymentIntent.id,
       amount,
       status: "PENDING",
+      idempotencyKey,
     },
     create: {
       userId,
@@ -46,6 +76,7 @@ export async function createPaymentIntent(userId: string, applicationId: string)
       amount,
       stripePaymentIntentId: paymentIntent.id,
       status: "PENDING",
+      idempotencyKey,
     },
   });
 
@@ -82,6 +113,11 @@ export async function confirmPayment(userId: string, paymentIntentId: string, ap
 }
 
 export async function handleWebhookEvent(event: StripeEvent) {
+  // Deduplication check - return early if already processed
+  if (await isWebhookProcessed(event.id)) {
+    return { received: true, deduplicated: true };
+  }
+
   if (event.type === "payment_intent.succeeded") {
     const pi = event.data.object;
     const applicationId = pi.applicationId as string | undefined;
@@ -115,6 +151,66 @@ export async function handleWebhookEvent(event: StripeEvent) {
       });
     }
   }
+
+  // New event handlers
+  if (event.type === "payment_intent.canceled") {
+    const pi = event.data.object;
+    const applicationId = pi.applicationId as string | undefined;
+    if (applicationId) {
+      await prisma.payment.updateMany({
+        where: { applicationId },
+        data: { status: "FAILED" },
+      });
+    }
+  }
+
+  if (event.type === "payment_intent.requires_action") {
+    const pi = event.data.object;
+    const applicationId = pi.applicationId as string | undefined;
+    if (applicationId) {
+      await prisma.payment.updateMany({
+        where: { applicationId },
+        data: { status: "PENDING" },
+      });
+    }
+  }
+
+  if (event.type === "charge.refunded") {
+    const charge = event.data.object;
+    const paymentIntentId = charge.payment_intent as string | undefined;
+    if (paymentIntentId) {
+      const payment = await prisma.payment.findUnique({ where: { stripePaymentIntentId: paymentIntentId } });
+      if (payment) {
+        await prisma.$transaction([
+          prisma.payment.update({
+            where: { id: payment.id },
+            data: { status: "REFUNDED" },
+          }),
+          prisma.application.update({
+            where: { id: payment.applicationId },
+            data: { status: "REJECTED" },
+          }),
+        ]);
+      }
+    }
+  }
+
+  if (event.type === "charge.dispute.created") {
+    const dispute = event.data.object;
+    const paymentIntentId = dispute.payment_intent as string | undefined;
+    if (paymentIntentId) {
+      const payment = await prisma.payment.findUnique({ where: { stripePaymentIntentId: paymentIntentId } });
+      if (payment) {
+        // Log dispute but don't auto-reject - admin review needed
+        console.warn(`Dispute created for payment ${payment.id}: ${dispute.id}`);
+      }
+    }
+  }
+
+  // Record event AFTER successful processing
+  await recordWebhookEvent(event.id, event.type, event.data.object);
+
+  return { received: true };
 }
 
 export async function getPaymentHistory(userId: string, page = 1, limit = 20) {

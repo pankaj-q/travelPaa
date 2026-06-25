@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { registerUser, loginUser, getMe, refreshAccessToken } from "./auth.service";
+import { registerUser, loginUser, getMe, refreshAccessToken, logoutUser } from "./auth.service";
 import { asyncHandler } from "../../shared/utils/asyncHandler";
 
 export const register = asyncHandler(async (req: Request, res: Response) => {
@@ -26,10 +26,14 @@ export const login = asyncHandler(async (req: Request, res: Response) => {
   res.json({ user: result.user, accessToken: result.accessToken });
 });
 
-export async function logout(_req: Request, res: Response) {
+export const logout = asyncHandler(async (req: Request, res: Response) => {
+  const token = req.cookies?.refreshToken;
+  if (token) {
+    await logoutUser(token);
+  }
   res.clearCookie("refreshToken", { path: "/api/v1/auth" });
   res.json({ message: "Logged out successfully" });
-}
+});
 
 export const me = asyncHandler(async (req: Request, res: Response) => {
   const user = await getMe(req.user!.userId);
@@ -44,7 +48,14 @@ export const refresh = asyncHandler(async (req: Request, res: Response) => {
   }
   try {
     const result = await refreshAccessToken(token);
-    res.json(result);
+    res.cookie("refreshToken", result.refreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+      path: "/api/v1/auth",
+    });
+    res.json({ accessToken: result.accessToken });
   } catch (err) {
     res.clearCookie("refreshToken", { path: "/api/v1/auth" });
     throw err;

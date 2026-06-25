@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useState, useCallback } from "react";
+import { Suspense, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
@@ -38,27 +38,7 @@ function ApplyForm() {
   const [paymentLoading, setPaymentLoading] = useState(false);
   const [paymentError, setPaymentError] = useState<string | null>(null);
   const [submittedAppId, setSubmittedAppId] = useState<string | null>(null);
-
-  const createPaymentIntent = useCallback(async (appId: string) => {
-    setPaymentLoading(true);
-    setPaymentError(null);
-    try {
-      const res = await fetch("/api/create-payment-intent", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ applicationId: appId }),
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error ?? "Failed to initialize payment");
-      setClientSecret(data.clientSecret);
-    } catch (err) {
-      setPaymentError(
-        err instanceof Error ? err.message : "Failed to initialize payment"
-      );
-    } finally {
-      setPaymentLoading(false);
-    }
-  }, []);
+  // const [paymentIntentId, setPaymentIntentId] = useState<string | null>(null);
 
   const validateStep = (stepNum: number): boolean => {
     const newErrors: Record<string, string> = {};
@@ -123,9 +103,13 @@ function ApplyForm() {
       const appId = appData.application?.id ?? appData.id;
       setSubmittedAppId(appId);
 
-      const piRes = await fetch("/api/create-payment-intent", {
+      // Use backend payment endpoint
+      const piRes = await fetch("/api/v1/payments/create-intent", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
         body: JSON.stringify({ applicationId: appId }),
       });
       const piData = await piRes.json();
@@ -142,11 +126,33 @@ function ApplyForm() {
     }
   };
 
-  const handlePaymentSuccess = () => {
-    setSubmitted(true);
+  const handlePaymentSuccess = async (piId: string) => {
+    const token = localStorage.getItem("accessToken");
+    try {
+      const confirmRes = await fetch("/api/v1/payments/confirm", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
+        body: JSON.stringify({
+          paymentIntentId: piId,
+          applicationId: submittedAppId,
+        }),
+      });
+      if (!confirmRes.ok) {
+        const data = await confirmRes.json();
+        throw new Error(data.error ?? "Payment confirmation failed");
+      }
+      setSubmitted(true);
+    } catch (err) {
+      setPaymentError(err instanceof Error ? err.message : "Payment confirmation failed");
+    }
   };
 
-  const handlePaymentError = () => {};
+  const handlePaymentError = (message: string) => {
+    setPaymentError(message);
+  };
 
   const steps = [
     { num: 1, label: "Personal Info", icon: User },
@@ -535,7 +541,7 @@ function ApplyForm() {
                       <p className="mb-6 text-xs text-muted">{paymentError}</p>
                       <button
                         type="button"
-                        onClick={() => submittedAppId && createPaymentIntent(submittedAppId)}
+                        onClick={() => submittedAppId && handleProceedToPayment({ preventDefault: () => {} } as React.FormEvent)}
                         className="inline-flex items-center gap-2 rounded-xl bg-coral px-5 py-2.5 text-sm font-semibold text-white shadow-md transition-all hover:bg-coral-dark"
                       >
                         <RotateCw className="h-4 w-4" />
@@ -548,7 +554,6 @@ function ApplyForm() {
                     <StripeProvider clientSecret={clientSecret}>
                       <PaymentForm
                         amount={5000}
-                        applicationId={submittedAppId ?? ""}
                         onSuccess={handlePaymentSuccess}
                         onError={handlePaymentError}
                       />

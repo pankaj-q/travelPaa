@@ -1,22 +1,15 @@
 import { prisma } from "../../config/database";
 import { AppError } from "../../shared/utils/AppError";
 import type { CreateApplicationInput } from "./application.validation";
+import crypto from "crypto";
 
-async function generateApplicationNumber(): Promise<string> {
-  const latest = await prisma.application.findFirst({
-    orderBy: { createdAt: "desc" },
-    select: { applicationNumber: true },
-  });
-  let nextNum = 1;
-  if (latest?.applicationNumber) {
-    const num = parseInt(latest.applicationNumber.replace("APP-", ""), 10);
-    if (!isNaN(num)) nextNum = num + 1;
-  }
-  return `APP-${String(nextNum).padStart(6, "0")}`;
+function generateApplicationNumber(): string {
+  // Format: APP-a1b2c3d4 (8 hex chars from UUID)
+  return `APP-${crypto.randomUUID().replace(/-/g, "").slice(0, 8)}`;
 }
 
 export async function createApplication(userId: string, input: CreateApplicationInput) {
-  const applicationNumber = await generateApplicationNumber();
+  const applicationNumber = generateApplicationNumber();
   return prisma.application.create({
     data: {
       userId,

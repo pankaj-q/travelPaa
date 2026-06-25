@@ -92,6 +92,7 @@ model Payment {
   amount                Int
   currency              String   @default("usd")
   stripePaymentIntentId String   @unique
+  idempotencyKey        String?  @unique
   status                PayStatus @default(PENDING)
   createdAt             DateTime @default(now())
   updatedAt             DateTime @updatedAt
@@ -130,4 +131,27 @@ model Contact {
 
   @@index([createdAt])
   @@map("contacts")
+}
+
+model WebhookEvent {
+  id            String   @id @default(cuid())
+  stripeEventId String   @unique
+  eventType     String
+  processedAt   DateTime @default(now())
+  payload       Json
+
+  @@index([eventType])
+  @@map("webhook_events")
+}
+
+model RefreshToken {
+  id        String   @id @default(cuid())
+  tokenHash String   @unique
+  userId    String
+  expiresAt DateTime
+  revokedAt DateTime?
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@map("refresh_tokens")
 }
