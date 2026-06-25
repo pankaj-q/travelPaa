@@ -89,7 +89,7 @@ export async function confirmPayment(userId: string, paymentIntentId: string, ap
     throw AppError.badRequest(`Payment not successful. Status: ${pi.status}`);
   }
 
-  const updated = await prisma.$transaction(async (tx) => {
+  const updated = await prisma.$transaction<{ status: string; stripePaymentIntentId: string; id: string; createdAt: Date; updatedAt: Date; userId: string; applicationId: string; amount: number; currency: string; idempotencyKey: string | null }>(async (tx) => {
     const payment = await tx.payment.findUnique({ where: { applicationId } });
     if (!payment) {
       throw AppError.notFound("Payment record not found");

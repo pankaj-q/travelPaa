@@ -1,4 +1,4 @@
-import express from "express";
+import express, { Request, Response } from "express";
 import cors from "cors";
 import helmet from "helmet";
 import cookieParser from "cookie-parser";
@@ -38,7 +38,7 @@ app.use(helmet({
 // CORS - support multiple origins (comma-separated for Vercel previews)
 const corsOrigins = env.CORS_ORIGIN.split(",").map((o) => o.trim());
 app.use(cors({
-  origin: (origin, callback) => {
+  origin: (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
     if (!origin || corsOrigins.includes(origin)) {
       callback(null, true);
     } else {
@@ -61,7 +61,7 @@ app.use("/api/v1/payments", paymentRoutes);
 app.use("/api/v1/admin", adminRoutes);
 app.use("/api/v1/contact", contactRoutes);
 
-app.get("/api/v1/health", (_req, res) => {
+app.get("/api/v1/health", (_req: Request, res: Response) => {
   res.json({ status: "ok", timestamp: new Date().toISOString() });
 });
 
