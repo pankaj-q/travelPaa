@@ -37,6 +37,10 @@ async function isWebhookProcessed(eventId: string): Promise<boolean> {
 }
 
 export async function createPaymentIntent(userId: string, applicationId: string) {
+  if (!stripe) {
+    throw AppError.serviceUnavailable("Stripe not configured. Please set STRIPE_SECRET_KEY.");
+  }
+
   const application = await prisma.application.findFirst({
     where: { id: applicationId, userId, deletedAt: null },
   });
